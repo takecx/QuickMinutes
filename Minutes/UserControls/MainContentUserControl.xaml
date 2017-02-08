@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Minutes.UserControls.MainContentUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:obj="clr-namespace:System.Collections;assembly=mscorlib"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:model="clr-namespace:Minutes.Model"
+             xmlns:beh="clr-namespace:Minutes.Behaviors"
+             xmlns:act="clr-namespace:Minutes.Actions"
+             xmlns:local="clr-namespace:Minutes.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="90" d:DesignWidth="300">
+    <!--<UserControl.DataContext>
+        <obj:/>
+    </UserControl.DataContext>-->
+    <StackPanel x:Name="MainContentStackPanel">
+        <StackPanel Orientation="Horizontal" Height="52">
+            <Label x:Name="label" Content="{Binding m_AgendaIndex}" />
+            <fa:ImageAwesome Icon="CircleOutline" Height="30" Margin="10,0,0,0" VerticalAlignment="Center"/>
+            <TextBox Style="{StaticResource HilightTextBox}" Text="{Binding m_Content,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10,13,0,13" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" VerticalContentAlignment="Center" Width="238" />
+        </StackPanel>
+        <fa:ImageAwesome Icon="PlusCircle" HorizontalAlignment="Left" Height="30" Margin="50,0,0,0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDown">
+                    <act:AddDetailAction TargetName="MainContentStackPanel"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </fa:ImageAwesome>
+    </StackPanel>
+</UserControl>
