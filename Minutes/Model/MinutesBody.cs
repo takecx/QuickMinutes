@@ -10,6 +10,16 @@ using System.Windows;
 
 namespace Minutes.Model
 {
+    public class Participant
+    {
+        public string Name { get; set; }
+        public Participant(string inName) { Name = inName; }
+    }
+    public class Writer
+    {
+        public string Name { get; set; }
+        public Writer(string inName) { Name = inName; }
+    }
 
     public class MinutesModel : BindableBase
     {
@@ -23,14 +33,14 @@ namespace Minutes.Model
             set { this.SetProperty(ref this._Title, value); }
         }
 
-        private DateTime _Day;
+        private DateTime _Day = DateTime.Today;
         public DateTime m_Day
         {
             get { return this._Day; }
             set { this.SetProperty(ref this._Day, value); }
         }
 
-        private DateTime _StartTime;
+        private DateTime _StartTime = DateTime.Now;
         public DateTime m_StartTime
         {
             get { return this._StartTime; }
@@ -50,21 +60,21 @@ namespace Minutes.Model
             set { this.SetProperty(ref this._Room, value); }
         }
 
-        private ObservableCollection<string> _Participants;
-        public ObservableCollection<string> m_Participants
+        private ObservableCollection<Participant> _Participants = new ObservableCollection<Participant>();
+        public ObservableCollection<Participant> m_Participants
         {
             get { return this._Participants; }
             set { this.SetProperty(ref this._Participants, value); }
         }
 
-        private ObservableCollection<string> _Writers;
-        public ObservableCollection<string> m_Writers
+        private ObservableCollection<Writer> _Writers = new ObservableCollection<Writer>();
+        public ObservableCollection<Writer> m_Writers
         {
             get { return this._Writers; }
             set { this.SetProperty(ref this._Writers, value); }
         }
 
-        private ObservableCollection<AgendaItem> _Agendas;
+        private ObservableCollection<AgendaItem> _Agendas = new ObservableCollection<AgendaItem>();
         public ObservableCollection<AgendaItem> m_Agendas
         {
             get { return this._Agendas; }
@@ -81,10 +91,6 @@ namespace Minutes.Model
 
         public MinutesModel()
         {
-            _Participants = new ObservableCollection<string>();
-            _Writers = new ObservableCollection<string>();
-            _Agendas = new ObservableCollection<AgendaItem>();
-
             #region for Function Test
             //m_Title = "test title";
             //m_Day = System.DateTime.Today;
@@ -224,9 +230,9 @@ namespace Minutes.Model
         private string GenerateExportWritersContent()
         {
             string result = "[Writers]";
-            foreach (string writer in m_Writers)
+            foreach (var writer in m_Writers)
             {
-                result += writer + ",";
+                result += writer.Name + ",";
             }
             result = result.Substring(0, result.Length - 1) + NEWLINE;
             return result;
@@ -235,9 +241,9 @@ namespace Minutes.Model
         private string GenerateExportParticipantsContent()
         {
             string result = "[Participants]";
-            foreach (string participant in m_Participants)
+            foreach (var participant in m_Participants)
             {
-                result += participant + ",";
+                result += participant.Name + ",";
             }
             result = result.Substring(0, result.Length - 1) + NEWLINE;
             return result;

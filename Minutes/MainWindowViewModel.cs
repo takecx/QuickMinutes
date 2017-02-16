@@ -9,10 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace Minutes
 {
+
     public class MainWindowViewModel : BindableBase
     {
         //Model
@@ -86,25 +88,36 @@ namespace Minutes
             }
         }
 
-        private ObservableCollection<string> _Participants;
-        public ObservableCollection<string> m_Participants
+        private ObservableCollection<Participant> _Participants = new ObservableCollection<Participant>();
+        public ObservableCollection<Participant> m_Participants
         {
             get { return this._Participants; }
-            set { this.SetProperty(ref this._Participants, value); }
+            set {
+                this.SetProperty(ref this._Participants, value);
+                m_MinutesModel.m_Participants = value;
+            }
         }
 
-        private ObservableCollection<string> _Writer;
-        public ObservableCollection<string> m_Writer
+        private ObservableCollection<Writer> _Writer = new ObservableCollection<Writer>();
+        public ObservableCollection<Writer> m_Writer
         {
             get { return this._Writer; }
-            set { this.SetProperty(ref this._Writer, value); }
+            set {
+                this.SetProperty(ref this._Writer, value);
+                m_MinutesModel.m_Writers = value;
+            }
         }
 
-        private ObservableCollection<string> _Agendas;
-        public ObservableCollection<string> m_Agendas
+        private ObservableCollection<AgendaItem> _Agendas = new ObservableCollection<AgendaItem>();
+        public ObservableCollection<AgendaItem> m_Agendas
         {
-            get { return this._Agendas; }
-            set { this.SetProperty(ref this._Agendas, value); }
+            get {
+                return this._Agendas;
+            }
+            set {
+                this.SetProperty(ref this._Agendas, value);
+                m_MinutesModel.m_Agendas = value;
+            }
         }
         #endregion
 
@@ -120,9 +133,6 @@ namespace Minutes
         public MainWindowViewModel()
         {
             this.SaveMinutesCommand = new DelegateCommand(SaveMinutes, CanSaveMinutes);
-            _Participants = new ObservableCollection<string>();
-            _Writer = new ObservableCollection<string>();
-            m_Agendas = new ObservableCollection<string>();
             m_SelectableTimeList = new List<string> {
             "07:00","07:15","07:30","07:45","08:00","08:15","08:30","08:45",
             "09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45",
@@ -145,14 +155,64 @@ namespace Minutes
             //とりあえず常に実行可能にしとく
             return true;
         }
-        internal void AddNewAgendaItemModel()
+        internal void AddNewAgendaItem()
         {
-            m_MinutesModel.m_Agendas.Insert(m_MinutesModel.m_Agendas.Count, new AgendaItem(m_MinutesModel.m_Agendas.Count));
+            var newAgendaItem = new AgendaItem(_Agendas.Count);
+            //ViewModelへの追加
+            _Agendas.Add(newAgendaItem);
+            //Modelへの追加
+            m_MinutesModel.m_Agendas.Insert(m_MinutesModel.m_Agendas.Count, newAgendaItem);
         }
         internal AgendaItem GetLastAgendaItem()
         {
-            return m_MinutesModel.m_Agendas[m_MinutesModel.m_Agendas.Count - 1];
+            return m_Agendas[m_Agendas.Count - 1];
+            //return m_MinutesModel.m_Agendas[m_MinutesModel.m_Agendas.Count - 1];
         }
 
+        internal void AddNewParticipant()
+        {
+            var newParticipant = new Participant("");
+            //ViewModel
+            _Participants.Add(newParticipant);
+            //Model
+            m_MinutesModel.m_Participants.Add(newParticipant);
+        }
+
+        internal void AddNewWriter()
+        {
+            var newWriter = new Writer("");
+            //ViewModel
+            _Writer.Add(newWriter);
+            //Model
+            m_MinutesModel.m_Writers.Add(newWriter);
+        }
+    }
+
+    public class AgendaContentConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var agendas = values[0] as ObservableCollection<string>;
+            int index = (int)values[1];
+
+            return agendas[index];
+        }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var agendas = value as ObservableCollection<string>;
+            if (agendas.Count == 0) return agendas[0];
+            return agendas[agendas.Count - 1];
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -77,6 +77,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Actions\AddDetailAction.cs" />
+    <Compile Include="Actions\AddHumanAction.cs" />
+    <Compile Include="Actions\AddWriterAction.cs" />
     <Compile Include="UserControls\DetailContentUserControl.xaml.cs">
       <DependentUpon>DetailContentUserControl.xaml</DependentUpon>
     </Compile>

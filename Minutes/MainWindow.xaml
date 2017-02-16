@@ -10,8 +10,43 @@
         xmlns:local="clr-namespace:Minutes"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="Minutes.MainWindow"
         mc:Ignorable="d"
-        Title="Minutes" Height="350" Width="556">
+        Title="Minutes" Height="456" Width="556" Background="#FF1B1B1C">
     <Window.Resources>
+        <Style x:Key="myStyle" TargetType="ListBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBox">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" Background="#FFB4DCFF">
+                            <StackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="MainContentsTemplate">
+            <StackPanel x:Name="MainContentStackPanel">
+                <StackPanel Orientation="Horizontal" Height="52">
+                    <Label x:Name="agendaIndexLabel" Content="{Binding m_AgendaIndex}" />
+                    <fa:ImageAwesome Icon="CircleOutline" Height="30" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                    <!--ValueConverterを使用してリスト中の該当する文字列を表示するように変更する-->
+                    <TextBox Style="{StaticResource HilightTextBox}" Text="{Binding m_Content,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Margin="10,13,0,13" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" VerticalContentAlignment="Center" Width="238" />
+                </StackPanel>
+                <fa:ImageAwesome Icon="PlusCircle" HorizontalAlignment="Left" Height="30" Margin="50,0,0,0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <act:AddDetailAction TargetName="MainContentStackPanel"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </fa:ImageAwesome>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="HeaderItemsTemplate">
+            <TextBox Style="{StaticResource HilightTextBox}" Text="{}" MinWidth="50" VerticalAlignment="Center" HorizontalAlignment="Left" Height="20" Margin="0,0,10,0">
+                <i:Interaction.Behaviors>
+                    <beh:FitTextBoxWidthBehavior />
+                </i:Interaction.Behaviors>
+            </TextBox>
+        </DataTemplate>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -311,12 +346,37 @@
             <ColumnDefinition Width="185"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ScrollViewer Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Auto">
+        <!--<ScrollViewer Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Auto" Grid.RowSpan="3">
             <StackPanel x:Name="MainContentsStackPanel" Background="#FFB9FFB6" >
                 <fa:ImageAwesome Icon="PlusCircle" HorizontalAlignment="Left" Margin="10" Width="20" Height="20" >
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDown">
                             <act:AddAgendaAction TargetName="MainContentsStackPanel"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </fa:ImageAwesome>
+            </StackPanel>
+        </ScrollViewer>-->
+        <ScrollViewer Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3">
+            <StackPanel>
+                <ListView  x:Name="MainContentsListView" ItemsSource="{Binding m_Agendas}" ItemTemplate="{StaticResource MainContentsTemplate}">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="OverridesDefaultStyle" Value="True"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ContentControl">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+                <fa:ImageAwesome Icon="PlusCircle" Height="20" HorizontalAlignment="Left" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <act:AddAgendaAction TargetName="MainContentsListView"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </fa:ImageAwesome>
@@ -337,7 +397,7 @@
             </fa:ImageAwesome>
         </Button>
         <fa:ImageAwesome Icon="Calendar" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,4" Height="24" Width="24"/>
-        <TextBox Style="{StaticResource HilightTextBox}" Grid.Row="1" Grid.Column="1" x:Name="DateTextBox" Height="24" Width="70" TextWrapping="Wrap" Text="{Binding m_Day, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="44,10,0,4">
+        <TextBox Style="{StaticResource HilightTextBox}" Grid.Row="1" Grid.Column="1" x:Name="DateTextBox" Height="24" Width="70" TextWrapping="Wrap" Text="{Binding m_Day, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="44,10,0,4">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <act:TextBoxCalenderAction TargetName="MainGrid" />
@@ -356,18 +416,100 @@
                 <beh:FitTextBoxWidthBehavior />
             </i:Interaction.Behaviors>
         </TextBox>
+        <!--<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3">-->
         <fa:ImageAwesome Icon="Users" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,4" Height="24" Width="24" />
-        <TextBox Style="{StaticResource HilightTextBox}" x:Name="participantTextBox" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="44,10,0,4" Height="24" Width="50" TextWrapping="Wrap" Text="{Binding m_Participants, Mode=TwoWay}" >
-            <i:Interaction.Behaviors>
-                <beh:FitTextBoxWidthBehavior />
-            </i:Interaction.Behaviors>
-        </TextBox>
+        <StackPanel  Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Margin="44,0,0,0">
+        <ListBox ItemsSource="{Binding m_Participants}">
+                    <!--Template property-->
+                    <!--主に Border コントロール等で全体の枠線や背景色の設定を行うことが多いです。また、コントロール内のどの部分にコレクション本体を配置するかも、ここで決定します (ItemsPresenter)。-->
+                    <ListBox.Template>
+                        <ControlTemplate TargetType="ListBox">
+                            <ItemsPresenter Margin="0" />
+                        </ControlTemplate>
+                    </ListBox.Template>
+                    <!--ItemsPanel-->
+                    <!--Panel の派生クラスを使用し、コレクション項目をどのようにレイアウトするかを決定します。StackPanel や WrapPanel で垂直または水平方向に並べることが多いでしょう。-->
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" VerticalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <!--ItemTemplate プロパティには DataTemplate を指定し、各項目のデータ オブジェクトをどのように表示するかを決定します。-->
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBox Style="{StaticResource HilightTextBox}" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" FontSize="12" Height="22" MinWidth="50" Margin="0,0,10,0"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <!--コレクション コントロール (ItemsControl) は、データ オブジェクトを格納する「コンテナー要素」を生成し、そのコンテナー要素を並べて表示します。生成されるコンテナー要素は ItemsControl の派生クラスごとに異なり、例えば ListBox が生成するコンテナー要素は ListBoxItem、ComboBox が生成するコンテナー要素は ComboBoxItem です。-->
+                    <!--ItemContainerStyle は、そのコンテナー要素をカスタマイズするためのプロパティです。項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作はコンテナー要素が実現しているもので、これらの動作を変更したい場合は ItemContainerStyle を設定しカスタマイズします。-->
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="OverridesDefaultStyle" Value="True"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ContentControl">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+                <fa:ImageAwesome Icon="PlusCircle" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <act:AddHumanAction TargetName="MainContentsListView"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </fa:ImageAwesome>
+        </StackPanel>
+        <!--</ScrollViewer>-->
         <fa:ImageAwesome Icon="Pencil" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,7" Height="22" Width="24" />
-        <TextBox Style="{StaticResource HilightTextBox}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="44,10,0,7" Height="22" Width="50" TextWrapping="Wrap" Text="{Binding m_Writers, Mode=TwoWay}" >
-            <i:Interaction.Behaviors>
-                <beh:FitTextBoxWidthBehavior />
-            </i:Interaction.Behaviors>
-        </TextBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="44,0,0,0">
+        <ListBox ItemsSource="{Binding m_Writer}">
+            <!--Template property-->
+            <!--主に Border コントロール等で全体の枠線や背景色の設定を行うことが多いです。また、コントロール内のどの部分にコレクション本体を配置するかも、ここで決定します (ItemsPresenter)。-->
+            <ListBox.Template>
+                <ControlTemplate TargetType="ListBox">
+                    <ItemsPresenter Margin="0" />
+                </ControlTemplate>
+            </ListBox.Template>
+            <!--ItemsPanel-->
+            <!--Panel の派生クラスを使用し、コレクション項目をどのようにレイアウトするかを決定します。StackPanel や WrapPanel で垂直または水平方向に並べることが多いでしょう。-->
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <!--ItemTemplate プロパティには DataTemplate を指定し、各項目のデータ オブジェクトをどのように表示するかを決定します。-->
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBox Style="{StaticResource HilightTextBox}" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" FontSize="12" Height="22" MinWidth="50" Margin="0,0,10,0"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <!--コレクション コントロール (ItemsControl) は、データ オブジェクトを格納する「コンテナー要素」を生成し、そのコンテナー要素を並べて表示します。生成されるコンテナー要素は ItemsControl の派生クラスごとに異なり、例えば ListBox が生成するコンテナー要素は ListBoxItem、ComboBox が生成するコンテナー要素は ComboBoxItem です。-->
+            <!--ItemContainerStyle は、そのコンテナー要素をカスタマイズするためのプロパティです。項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作はコンテナー要素が実現しているもので、これらの動作を変更したい場合は ItemContainerStyle を設定しカスタマイズします。-->
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="OverridesDefaultStyle" Value="True"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ContentControl">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+        <fa:ImageAwesome Icon="PlusCircle" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDown">
+                    <act:AddWriterAction TargetName="MainContentsListView"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </fa:ImageAwesome>
+        </StackPanel>
         <ComboBox x:Name="startTimeComboBox" Text="{Binding m_StartTime}" HorizontalAlignment="Left" Margin="39,12,0,0" VerticalAlignment="Top" Width="55" IsEditable="True" Grid.Row="1" Grid.Column="2" Height="22" ItemsSource="{Binding m_SelectableTimeList}" Style="{DynamicResource ComboBoxStyle1}"/>
         <ComboBox x:Name="endTimeComboBox" Text="{Binding m_EndTime}" HorizontalAlignment="Left" Margin="116,10,0,0" VerticalAlignment="Top" Width="55" IsEditable="True" Grid.Row="1" Grid.Column="2" Height="22" ItemsSource="{Binding m_SelectableTimeList}" Style="{DynamicResource ComboBoxStyle1}"/>
         <Calendar x:Name="calender" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="44,6,0,0" Focusable="False" Height="165" Width="179" Grid.RowSpan="4" Grid.Column="1" Visibility="Hidden" >
