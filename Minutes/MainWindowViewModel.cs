@@ -119,6 +119,14 @@ namespace Minutes
                 m_MinutesModel.m_Agendas = value;
             }
         }
+
+        //private ObservableCollection<DetailItem> _Details;
+        //public ObservableCollection<DetailItem> m_Details
+        //{
+        //    get { return this._Details; }
+        //    set { this.SetProperty(ref this._Details, value); }
+        //}
+
         #endregion
 
         #region コマンド一覧
@@ -159,10 +167,25 @@ namespace Minutes
         {
             var newAgendaItem = new AgendaItem(_Agendas.Count);
             //ViewModelへの追加
+            //ここをコメントアウトするとListViewに要素が追加されない(表示が変わらない)
             _Agendas.Add(newAgendaItem);
             //Modelへの追加
+            //ここをコメントアウトするとデータが保存されない
             m_MinutesModel.m_Agendas.Insert(m_MinutesModel.m_Agendas.Count, newAgendaItem);
         }
+        internal void AddNewDetailItem(DetailItem newDetailItem,int inAgendaIndex)
+        {
+            //ViewModelに追加してもModelに追加しても、どっちでもViewには新しいコントロールが表示される（両方やると２つ）
+            //ViewModelはわかるけど、なぜModelに追加してViewが変更されるのか。。。
+            //↑
+            //AddAgendaItem()で１つのオブジェクトをViewModelにもModelにも追加しているので同じオブジェクトに対する参照を持っているのが原因だと思う
+
+            //ViewModelへの追加
+            //_Agendas[inAgendaIndex].m_DetailItems.Insert(_Agendas[inAgendaIndex].m_DetailItems.Count, newDetailItem);
+            //Modelへの追加
+            m_MinutesModel.m_Agendas[inAgendaIndex].m_DetailItems.Insert(m_MinutesModel.m_Agendas[inAgendaIndex].m_DetailItems.Count, newDetailItem);
+        }
+
         internal AgendaItem GetLastAgendaItem()
         {
             return m_Agendas[m_Agendas.Count - 1];

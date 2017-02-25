@@ -17,14 +17,8 @@ namespace Minutes.Actions
     {
         protected override void Invoke(object parameter)
         {
-            (this.Target.DataContext as AgendaItem).AddDetailItemModel();
-
-            //追加するコントロールの生成
-            var detailContent = new DetailContentUserControl() {
-                Margin = new Thickness(50, 10, 10, 0),
-                DataContext = (this.Target.DataContext as AgendaItem).GetLastDetailItem(),
-            };
-            this.Target.Children.Insert(this.Target.Children.Count - 1, detailContent);
+            (this.Target.DataContext as AgendaItem).AddNewDetailItem();
+            //(Application.Current.MainWindow.DataContext as MainWindowViewModel).AddNewDetailItem(newDetailItem, (this.Target.DataContext as AgendaItem).m_AgendaIndex);
         }
     }
 }

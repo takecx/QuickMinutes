@@ -1,69 +1,257 @@
-﻿<UserControl x:Class="Minutes.UserControls.DetailContentUserControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
-             xmlns:local="clr-namespace:Minutes.UserControls"
-             mc:Ignorable="d" 
-             d:DesignHeight="80" d:DesignWidth="300">
-    <UserControl.DataContext>
-        <local:DetailContentUserControlViewModel/>
-    </UserControl.DataContext>
-    <Grid Background="#FFC0D0DA">
+﻿<UserControl
+    x:Class="Minutes.UserControls.DetailContentUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+    xmlns:local="clr-namespace:Minutes.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:deteilact="clr-namespace:Minutes.Actions.DetailContent"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    d:DesignHeight="80"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <SolidColorBrush Color="#FF808080" x:Key="ToolsBackground"/>
+        <Style x:Key="HilightImageAwesome" TargetType="{x:Type fa:ImageAwesome}">
+            <Setter Property="Foreground" Value="#FF808080"/>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="Black" Duration="0:0:0.05"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="#FF808080" Duration="0:0:0.05"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid x:Name="baseContainer">
         <Grid.RowDefinitions>
-            <RowDefinition Height="9*"/>
-            <RowDefinition Height="7*"/>
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="7*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="78*"/>
-            <ColumnDefinition Width="89*"/>
-            <ColumnDefinition Width="133"/>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="192" />
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="textBox" Grid.Row="0" Grid.ColumnSpan="3" Height="38" VerticalContentAlignment="Center" TextWrapping="Wrap" Margin="2,2,2,0" Text="{Binding m_Content,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" FontSize="24" Style="{StaticResource HilightTextBox}"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-            <fa:ImageAwesome Icon="ArrowLeft" Height="10" Margin="5,3" Foreground="{Binding m_ToolColorBrush}" />
-            <fa:ImageAwesome Icon="ArrowRight" Height="10" Margin="5,3" Foreground="{Binding m_ToolColorBrush}" />
-            <fa:ImageAwesome Icon="Times" Height="10" Margin="5,3" Foreground="{Binding m_ToolColorBrush}" />
-            <fa:ImageAwesome Icon="Share" Height="10" Margin="5,3" Foreground="{Binding m_ToolColorBrush}" RenderTransformOrigin="0.5,0.5" >
+        <Rectangle Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3" Fill="#FFC0D0DA"/>
+        <TextBox
+            x:Name="textBox"
+            Grid.Row="0"
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            Height="38"
+            Margin="2,2,2,0"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center"
+            FontSize="24"
+            Style="{StaticResource HilightTextBox}"
+            Text="{Binding m_Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            TextWrapping="Wrap"/>
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            Orientation="Horizontal">
+            <fa:ImageAwesome
+                Height="10"
+                Margin="7,3"
+                Style="{StaticResource HilightImageAwesome}"
+                Icon="ArrowLeft" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <deteilact:DecrementDetailContentIndexAction TargetName="baseContainer" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </fa:ImageAwesome>
+            <fa:ImageAwesome
+                Height="10"
+                Margin="7,3"
+                Style="{StaticResource HilightImageAwesome}"
+                Icon="ArrowRight" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <deteilact:IncrementDetailContentIndentAction TargetName="baseContainer" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </fa:ImageAwesome>
+            <fa:ImageAwesome
+                Height="10"
+                Margin="7,3"
+                Style="{StaticResource HilightImageAwesome}"
+                Icon="Times" />
+            <fa:ImageAwesome
+                Height="10"
+                Margin="7,3"
+                Style="{StaticResource HilightImageAwesome}"
+                Icon="Share"
+                RenderTransformOrigin="0.5,0.5">
                 <fa:ImageAwesome.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="180"/>
-                        <TranslateTransform/>
+                        <ScaleTransform />
+                        <SkewTransform />
+                        <RotateTransform Angle="180" />
+                        <TranslateTransform />
                     </TransformGroup>
                 </fa:ImageAwesome.RenderTransform>
             </fa:ImageAwesome>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
-            <fa:ImageAwesome Grid.Column="2" Icon="CheckCircleOutline" Height="10" Margin="5,3" Foreground="{Binding m_ToolColorBrush}">
-                <fa:ImageAwesome.Style>
-                    <Style TargetType="fa:ImageAwesome">
-                        <Style.Triggers>
-                            <EventTrigger RoutedEvent="UIElement.MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#FF30B4FF" Duration="0:0:0.2"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="UIElement.MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#FF807373" Duration="0:0:0.2"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </fa:ImageAwesome.Style>
-            </fa:ImageAwesome>
-            <Label x:Name="DecidedLabel" Content="決定" Margin="-7,0" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{Binding m_ToolColorBrush}"/>
-            <fa:ImageAwesome Grid.Column="2" Icon="Edit" Height="10" Margin="10,3" Foreground="{Binding m_ToolColorBrush}" />
-            <Label x:Name="IssueLabel" Content="宿題" Margin="-12,0" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{Binding m_ToolColorBrush}"/>
-            <fa:ImageAwesome Grid.Column="2" Icon="Exclamation" Height="10" Margin="13,3" Foreground="{Binding m_ToolColorBrush}" />
-            <Label x:Name="ImportantLabel" Content="重要" Margin="-14,0" VerticalContentAlignment="Center" FontWeight="Bold" Foreground="{Binding m_ToolColorBrush}"/>
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="3"
+            Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Name="DecisionStackPanel" Margin="0,0,30,0">
+                <fa:ImageAwesome
+                Name="DecisionIcon"
+                Height="15"
+                Margin="5,3"
+                Icon="CheckCircleOutline">
+                    <fa:ImageAwesome.Style>
+                        <Style TargetType="fa:ImageAwesome">
+                            <Setter Property="Foreground" Value="#FF808080"/>
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                            Storyboard.TargetProperty="Foreground.Color"
+                                            To="#FF30B4FF"
+                                            Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                            Storyboard.TargetProperty="Foreground.Color"
+                                            To="#FF808080"
+                                            Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </fa:ImageAwesome.Style>
+                </fa:ImageAwesome>
+                <Label
+                x:Name="DecidedLabel"
+                Margin="-7,0"
+                VerticalContentAlignment="Center"
+                Content="決定"
+                FontWeight="Bold"
+                Foreground="{StaticResource ResourceKey=ToolsBackground}" >
+                </Label>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <deteilact:ChangeStateToDecisionAction TargetName="BulletLabel" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Name="ToDoStackPanel" Margin="0,0,25,0">
+                <fa:ImageAwesome
+                Name="ToDoIcon"
+                Height="15"
+                Margin="0,3,10,3"
+                Icon="Edit" >
+                    <fa:ImageAwesome.Style>
+                        <Style TargetType="fa:ImageAwesome">
+                            <Setter Property="Foreground" Value="#FF808080"/>
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                            Storyboard.TargetProperty="Foreground.Color"
+                                            To="#FFFF0000"
+                                            Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                            Storyboard.TargetProperty="Foreground.Color"
+                                            To="#FF808080"
+                                            Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </fa:ImageAwesome.Style>
+                </fa:ImageAwesome>
+                <Label
+                x:Name="IssueLabel"
+                Margin="-12,0,0,0"
+                VerticalContentAlignment="Center"
+                Content="宿題"
+                FontWeight="Bold"
+                Foreground="{StaticResource ResourceKey=ToolsBackground}" />
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <deteilact:ChangeStateToToDoAction TargetName="BulletLabel" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Name="ImportantStackPanel">
+                <fa:ImageAwesome
+                Name="ImportantIcon"
+                Height="15"
+                Margin="0,3,13,3"
+                Icon="Exclamation" >
+                    <fa:ImageAwesome.Style>
+                        <Style TargetType="fa:ImageAwesome">
+                            <Setter Property="Foreground" Value="#FF808080"/>
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                            Storyboard.TargetProperty="Foreground.Color"
+                                            To="#FFC7C723"
+                                            Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation
+                                            Storyboard.TargetProperty="Foreground.Color"
+                                            To="#FF808080"
+                                            Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </fa:ImageAwesome.Style>
+                </fa:ImageAwesome>
+                <Label
+                x:Name="ImportantLabel"
+                Margin="-14,0,0,0"
+                VerticalContentAlignment="Center"
+                Content="重要"
+                FontWeight="Bold"
+                Foreground="{StaticResource ResourceKey=ToolsBackground}" />
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <deteilact:ChangeStateToImportantAction TargetName="BulletLabel" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </StackPanel>
         </StackPanel>
+        <fa:ImageAwesome Icon="Circle" x:Name="BulletLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="7"/>
     </Grid>
 </UserControl>

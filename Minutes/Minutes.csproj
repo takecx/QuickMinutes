@@ -79,6 +79,11 @@
     <Compile Include="Actions\AddDetailAction.cs" />
     <Compile Include="Actions\AddHumanAction.cs" />
     <Compile Include="Actions\AddWriterAction.cs" />
+    <Compile Include="Actions\DetailContent\ChangeStateToDecisionAction.cs" />
+    <Compile Include="Actions\DetailContent\ChangeStateToImportantAction.cs" />
+    <Compile Include="Actions\DetailContent\ChangeStateToToDoAction.cs" />
+    <Compile Include="Actions\DetailContent\DecrementDetailContentIndexAction.cs" />
+    <Compile Include="Actions\DetailContent\IncrementDetailContentIndentAction.cs" />
     <Compile Include="UserControls\DetailContentUserControl.xaml.cs">
       <DependentUpon>DetailContentUserControl.xaml</DependentUpon>
     </Compile>

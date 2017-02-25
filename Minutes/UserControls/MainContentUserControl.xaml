@@ -1,43 +1,73 @@
-﻿<UserControl x:Class="Minutes.UserControls.MainContentUserControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:obj="clr-namespace:System.Collections;assembly=mscorlib"
-             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:model="clr-namespace:Minutes.Model"
-             xmlns:beh="clr-namespace:Minutes.Behaviors"
-             xmlns:act="clr-namespace:Minutes.Actions"
-             xmlns:local="clr-namespace:Minutes.UserControls"
-             xmlns:main="clr-namespace:Minutes"
-             mc:Ignorable="d" 
-             d:DesignHeight="90" d:DesignWidth="300">
-    <!--<UserControl.DataContext>
-        <main:MainWindowViewModel/>
-    </UserControl.DataContext>-->
+﻿<UserControl
+    x:Class="Minutes.UserControls.MainContentUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:act="clr-namespace:Minutes.Actions"
+    xmlns:beh="clr-namespace:Minutes.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:local="clr-namespace:Minutes.UserControls"
+    xmlns:main="clr-namespace:Minutes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Minutes.Model"
+    xmlns:obj="clr-namespace:System.Collections;assembly=mscorlib"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
     <UserControl.Resources>
-        <main:AgendaContentConverter x:Key="agendaContentConverter"/>
+        <main:AgendaContentConverter x:Key="agendaContentConverter" />
     </UserControl.Resources>
     <StackPanel x:Name="MainContentStackPanel">
-        <StackPanel Orientation="Horizontal" Height="52">
-            <Label x:Name="agendaIndexLabel" Content="{Binding m_AgendaIndex}" />
-            <fa:ImageAwesome Icon="CircleOutline" Height="30" Margin="10,0,0,0" VerticalAlignment="Center"/>
-            <!--ValueConverterを使用してリスト中の該当する文字列を表示するように変更する-->
-            <TextBox Style="{StaticResource HilightTextBox}"  Margin="10,13,0,13" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" VerticalContentAlignment="Center" Width="238" >
-                <TextBox.Text>
-                    <MultiBinding Converter="{StaticResource agendaContentConverter}">
-                        <Binding Path="m_Agendas"/>
-                        <Binding Path="Text" ElementName="agendaIndexLabel"/>
-                    </MultiBinding>
-                </TextBox.Text>
-            </TextBox>
-            <!--<TextBox Style="{StaticResource HilightTextBox}" Text="{Binding m_Content,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="10,13,0,13" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" VerticalContentAlignment="Center" Width="238" />-->
-        </StackPanel>
-        <fa:ImageAwesome Icon="PlusCircle" HorizontalAlignment="Left" Height="30" Margin="50,0,0,0">
+        <DockPanel LastChildFill="True">
+            <Label x:Name="agendaIndexLabel" Content="{Binding m_AgendaIndex}" DockPanel.Dock="Left" />
+            <fa:ImageAwesome
+                DockPanel.Dock="Left"
+                Height="30"
+                Margin="0,0,0,0"
+                VerticalAlignment="Center"
+                Icon="CircleOutline" />
+            <!--  ValueConverterを使用してリスト中の該当する文字列を表示するように変更する  -->
+            <TextBox
+                Margin="10,13,10,13"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                FontSize="35"
+                Style="{StaticResource HilightTextBox}"
+                Text="{Binding m_Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </DockPanel>
+        <ListView ItemsSource="{Binding m_DetailItems}">
+            <ListView.Template>
+                <ControlTemplate TargetType="ListView">
+                    <ItemsPresenter Margin="3,3,3,3"/>
+                </ControlTemplate>
+            </ListView.Template>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel VerticalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:DetailContentUserControl Margin="50,0,0,0" Padding="5"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ContentControl">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <fa:ImageAwesome Height="20" Margin="50,0,0,10" HorizontalAlignment="Left" Icon="PlusCircle">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
-                    <act:AddDetailAction TargetName="MainContentStackPanel"/>
+                    <act:AddDetailAction TargetName="MainContentStackPanel" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </fa:ImageAwesome>

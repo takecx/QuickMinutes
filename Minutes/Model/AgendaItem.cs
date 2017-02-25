@@ -10,7 +10,7 @@ namespace Minutes
     public class AgendaItem : AbstractMinutesContent
     {
         #region Notifiable Property List
-        private ObservableCollection<DetailItem> _DetailItems;
+        private ObservableCollection<DetailItem> _DetailItems = new ObservableCollection<DetailItem>();
         public ObservableCollection<DetailItem> m_DetailItems
         {
             get { return this._DetailItems; }
@@ -23,22 +23,16 @@ namespace Minutes
             get { return this._AgendaIndex; }
             set { this.SetProperty(ref this._AgendaIndex, value); }
         }
-
         #endregion
 
         public AgendaItem(int inAgendaIndex)
         {
-            m_DetailItems = new ObservableCollection<DetailItem>();
             m_AgendaIndex = inAgendaIndex;
         }
-        internal void AddDetailItemModel()
+        internal void AddNewDetailItem()
         {
-            m_DetailItems.Insert(m_DetailItems.Count, new DetailItem(m_DetailItems.Count));
+            //Modelへの追加
+            _DetailItems.Add(new DetailItem(m_DetailItems.Count));
         }
-        internal object GetLastDetailItem()
-        {
-            return m_DetailItems[m_DetailItems.Count - 1];
-        }
-
     }
 }

@@ -11,24 +11,6 @@ using System.Windows.Interactivity;
 
 namespace Minutes.Actions
 {
-    //[TypeConstraint(typeof(ImageAwesome))]
-    //class AddAgendaAction : TargetedTriggerAction<StackPanel>
-    //{
-    //    protected override void Invoke(object parameter)
-    //    {
-    //        (this.Target.DataContext as MainWindowViewModel).AddNewAgendaItemModel();
-
-    //        //コントロール追加
-    //        this.Target.Children.Insert(this.Target.Children.Count - 1, 
-    //            new UserControls.MainContentUserControl
-    //            {
-    //                Margin = new System.Windows.Thickness(10, 10, 10, 0),
-    //                //DataContext = this.Target.DataContext as MainWindowViewModel,
-    //                DataContext = (this.Target.DataContext as MainWindowViewModel).GetLastAgendaItem(),
-    //                //Style = Application.Current.FindResource("HilightTextBox") as Style,
-    //            });
-    //    }
-    //}
     [TypeConstraint(typeof(ImageAwesome))]
     class AddAgendaAction : TargetedTriggerAction<ListView>
     {

@@ -230,6 +230,7 @@ namespace Minutes.Model
         private string GenerateExportWritersContent()
         {
             string result = "[Writers]";
+            if (_Writers.Count == 0) return result + NEWLINE;
             foreach (var writer in m_Writers)
             {
                 result += writer.Name + ",";
@@ -241,6 +242,7 @@ namespace Minutes.Model
         private string GenerateExportParticipantsContent()
         {
             string result = "[Participants]";
+            if (_Participants.Count == 0) return result + NEWLINE;
             foreach (var participant in m_Participants)
             {
                 result += participant.Name + ",";
