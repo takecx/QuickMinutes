@@ -84,6 +84,7 @@
     <Compile Include="Actions\DetailContent\ChangeStateToToDoAction.cs" />
     <Compile Include="Actions\DetailContent\DecrementDetailContentIndexAction.cs" />
     <Compile Include="Actions\DetailContent\IncrementDetailContentIndentAction.cs" />
+    <Compile Include="Behaviors\DeleteAgendaBehavior.cs" />
     <Compile Include="UserControls\DetailContentUserControl.xaml.cs">
       <DependentUpon>DetailContentUserControl.xaml</DependentUpon>
     </Compile>
@@ -148,6 +149,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Actions\MainContent\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

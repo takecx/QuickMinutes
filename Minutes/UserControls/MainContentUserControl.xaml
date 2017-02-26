@@ -18,23 +18,39 @@
         <main:AgendaContentConverter x:Key="agendaContentConverter" />
     </UserControl.Resources>
     <StackPanel x:Name="MainContentStackPanel">
-        <DockPanel LastChildFill="True">
-            <Label x:Name="agendaIndexLabel" Content="{Binding m_AgendaIndex}" DockPanel.Dock="Left" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="36"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="33"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="agendaIndexLabel"
+                   Content="{Binding m_AgendaIndex}"
+                   Grid.Column="0"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"/>
             <fa:ImageAwesome
-                DockPanel.Dock="Left"
+                Grid.Column="0"
                 Height="30"
-                Margin="0,0,0,0"
                 VerticalAlignment="Center"
+                HorizontalAlignment="Center"
                 Icon="CircleOutline" />
             <!--  ValueConverterを使用してリスト中の該当する文字列を表示するように変更する  -->
             <TextBox
-                Margin="10,13,10,13"
+                Grid.Column="1"
+                Margin="5,10"
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"
+                HorizontalAlignment="Stretch"
                 FontSize="35"
                 Style="{StaticResource HilightTextBox}"
-                Text="{Binding m_Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        </DockPanel>
+                Text="{Binding m_Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <fa:ImageAwesome Icon="TrashOutline" Height="30" Width="30" Grid.Column="2" >
+                <i:Interaction.Behaviors>
+                    <beh:DeleteAgendaBehavior />
+                </i:Interaction.Behaviors>
+            </fa:ImageAwesome>
+        </Grid>
         <ListView ItemsSource="{Binding m_DetailItems}">
             <ListView.Template>
                 <ControlTemplate TargetType="ListView">
