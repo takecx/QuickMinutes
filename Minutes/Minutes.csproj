@@ -77,7 +77,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Actions\AddDetailAction.cs" />
-    <Compile Include="Actions\AddHumanAction.cs" />
+    <Compile Include="Actions\AddParticipantAction.cs" />
     <Compile Include="Actions\AddWriterAction.cs" />
     <Compile Include="Actions\DetailContent\ChangeStateToDecisionAction.cs" />
     <Compile Include="Actions\DetailContent\ChangeStateToImportantAction.cs" />
@@ -85,6 +85,9 @@
     <Compile Include="Actions\DetailContent\DecrementDetailContentIndexAction.cs" />
     <Compile Include="Actions\DetailContent\IncrementDetailContentIndentAction.cs" />
     <Compile Include="Behaviors\DeleteAgendaBehavior.cs" />
+    <Compile Include="Behaviors\DeleteDetailBehavior.cs" />
+    <Compile Include="Behaviors\DeleteParticipantAction.cs" />
+    <Compile Include="Behaviors\DeleteWriterAction.cs" />
     <Compile Include="UserControls\DetailContentUserControl.xaml.cs">
       <DependentUpon>DetailContentUserControl.xaml</DependentUpon>
     </Compile>

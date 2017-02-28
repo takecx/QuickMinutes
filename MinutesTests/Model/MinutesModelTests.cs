@@ -59,7 +59,7 @@ namespace Minutes.Model.Tests
         public void GenerateExportParticipantsContentTest()
         {
             MinutesModel model = new MinutesModel();
-            model.m_Participants = new System.Collections.ObjectModel.ObservableCollection<Participant> { new Participant("man1"), new Participant("man2"), new Participant("woman1") };
+            model.m_Participants = new System.Collections.ObjectModel.ObservableCollection<Participant> { new Participant("man1",0), new Participant("man2",1), new Participant("woman1",2) };
             string expected = "[Participants]man1,man2,woman1\n";
             Assert.AreEqual(expected, model.AsDynamic().GenerateExportParticipantsContent());
         }
@@ -67,7 +67,7 @@ namespace Minutes.Model.Tests
         public void GenerateExportWritersContentTest()
         {
             MinutesModel model = new MinutesModel();
-            model.m_Writers = new System.Collections.ObjectModel.ObservableCollection<Writer> { new Writer("man1"), new Writer("woman1") };
+            model.m_Writers = new System.Collections.ObjectModel.ObservableCollection<Writer> { new Writer("man1",0), new Writer("woman1",1) };
             string expected = "[Writers]man1,woman1\n";
             Assert.AreEqual(expected, model.AsDynamic().GenerateExportWritersContent());
         }
@@ -143,8 +143,8 @@ namespace Minutes.Model.Tests
             model.m_StartTime = new DateTime(2000, 1, 2, 3, 4, 5);
             model.m_EndTime = new DateTime(2001, 6, 7, 8, 9, 10);
             model.m_Room = "room1";
-            model.m_Participants = new System.Collections.ObjectModel.ObservableCollection<Participant> { new Participant("participant1"), new Participant("participant2"), new Participant("participant3") };
-            model.m_Writers = new System.Collections.ObjectModel.ObservableCollection<Writer> { new Writer("writer1"),new Writer("writer2") };
+            model.m_Participants = new System.Collections.ObjectModel.ObservableCollection<Participant> { new Participant("participant1",0), new Participant("participant2",1), new Participant("participant3",2) };
+            model.m_Writers = new System.Collections.ObjectModel.ObservableCollection<Writer> { new Writer("writer1",0),new Writer("writer2",1) };
             model.m_Agendas = new System.Collections.ObjectModel.ObservableCollection<AgendaItem>();
             AgendaItem agenda1 = new AgendaItem(1);
             agenda1.m_AgendaIndex = 1;

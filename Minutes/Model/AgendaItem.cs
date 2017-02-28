@@ -32,7 +32,7 @@ namespace Minutes
         internal void AddNewDetailItem()
         {
             //Modelへの追加
-            _DetailItems.Add(new DetailItem(m_DetailItems.Count));
+            _DetailItems.Add(new DetailItem(m_DetailItems.Count,m_AgendaIndex));
         }
     }
 }

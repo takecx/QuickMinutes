@@ -7,31 +7,12 @@
     xmlns:local="clr-namespace:Minutes.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:deteilact="clr-namespace:Minutes.Actions.DetailContent"
+    xmlns:beh="clr-namespace:Minutes.Behaviors"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     d:DesignHeight="80"
-    d:DesignWidth="400"
+    d:DesignWidth="450"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <SolidColorBrush Color="#FF808080" x:Key="ToolsBackground"/>
-        <Style x:Key="HilightImageAwesome" TargetType="{x:Type fa:ImageAwesome}">
-            <Setter Property="Foreground" Value="#FF808080"/>
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="UIElement.MouseEnter">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="Black" Duration="0:0:0.05"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="UIElement.MouseLeave">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="#FF808080" Duration="0:0:0.05"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Style.Triggers>
-        </Style>
     </UserControl.Resources>
     <Grid x:Name="baseContainer">
         <Grid.RowDefinitions>
@@ -42,7 +23,8 @@
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="100"/>
             <ColumnDefinition />
-            <ColumnDefinition Width="192" />
+            <ColumnDefinition Width="193" />
+            <ColumnDefinition Width="33"/>
         </Grid.ColumnDefinitions>
         <Rectangle Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3" Fill="#FFC0D0DA"/>
         <TextBox
@@ -108,7 +90,7 @@
         <StackPanel
             Grid.Row="1"
             Grid.Column="3"
-            Orientation="Horizontal">
+            Orientation="Horizontal" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal" Name="DecisionStackPanel" Margin="0,0,30,0">
                 <fa:ImageAwesome
                 Name="DecisionIcon"
@@ -149,7 +131,7 @@
                 VerticalContentAlignment="Center"
                 Content="決定"
                 FontWeight="Bold"
-                Foreground="{StaticResource ResourceKey=ToolsBackground}" >
+                Foreground="{StaticResource ResourceKey=UnselectColor}" >
                 </Label>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">
@@ -197,7 +179,7 @@
                 VerticalContentAlignment="Center"
                 Content="宿題"
                 FontWeight="Bold"
-                Foreground="{StaticResource ResourceKey=ToolsBackground}" />
+                Foreground="{StaticResource ResourceKey=UnselectColor}" />
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">
                         <deteilact:ChangeStateToToDoAction TargetName="BulletLabel" />
@@ -244,7 +226,7 @@
                 VerticalContentAlignment="Center"
                 Content="重要"
                 FontWeight="Bold"
-                Foreground="{StaticResource ResourceKey=ToolsBackground}" />
+                Foreground="{StaticResource ResourceKey=UnselectColor}" />
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">
                         <deteilact:ChangeStateToImportantAction TargetName="BulletLabel" />
@@ -252,6 +234,11 @@
                 </i:Interaction.Triggers>
             </StackPanel>
         </StackPanel>
-        <fa:ImageAwesome Icon="Circle" x:Name="BulletLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="7"/>
+        <fa:ImageAwesome Icon="Circle" x:Name="BulletLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="8" Margin="6,19" Height="7"/>
+        <fa:ImageAwesome Icon="TrashOutline" Grid.Row="0" Grid.Column="4" Height="20" Width="20">
+            <i:Interaction.Behaviors>
+                <beh:DeleteDetailBehavior />
+            </i:Interaction.Behaviors>
+        </fa:ImageAwesome>
     </Grid>
 </UserControl>

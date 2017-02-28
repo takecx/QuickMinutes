@@ -252,13 +252,20 @@
                 <!--  ItemTemplate プロパティには DataTemplate を指定し、各項目のデータ オブジェクトをどのように表示するかを決定します。  -->
                 <ListBox.ItemTemplate>
                     <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
                         <TextBox
                             Height="22"
                             MinWidth="50"
-                            Margin="0,0,10,0"
+                            Margin="0,0,0,0"
                             FontSize="12"
                             Style="{StaticResource HilightTextBox}"
                             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <fa:ImageAwesome Icon="Times" Height="10" Width="10" Margin="0,0,5,0" Foreground="{StaticResource ResourceKey=UnselectColor}" Style="{StaticResource HilightImageAwesome}">
+                                <i:Interaction.Behaviors>
+                                    <beh:DeleteParticipantAction />
+                                </i:Interaction.Behaviors>
+                            </fa:ImageAwesome>
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <!--  コレクション コントロール (ItemsControl) は、データ オブジェクトを格納する「コンテナー要素」を生成し、そのコンテナー要素を並べて表示します。生成されるコンテナー要素は ItemsControl の派生クラスごとに異なり、例えば ListBox が生成するコンテナー要素は ListBoxItem、ComboBox が生成するコンテナー要素は ComboBoxItem です。  -->
@@ -283,7 +290,7 @@
                 Icon="PlusCircle">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">
-                        <act:AddHumanAction TargetName="MainContentsListView" />
+                        <act:AddParticipantAction TargetName="MainContentsListView" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </fa:ImageAwesome>
@@ -322,13 +329,20 @@
                 <!--  ItemTemplate プロパティには DataTemplate を指定し、各項目のデータ オブジェクトをどのように表示するかを決定します。  -->
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBox
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox
                             Height="22"
                             MinWidth="50"
                             Margin="0,0,10,0"
                             FontSize="12"
                             Style="{StaticResource HilightTextBox}"
                             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <fa:ImageAwesome Icon="Times" Height="10" Width="10" Margin="0,0,5,0" Foreground="{StaticResource ResourceKey=UnselectColor}" Style="{StaticResource HilightImageAwesome}">
+                                <i:Interaction.Behaviors>
+                                    <beh:DeleteWriterAction />
+                                </i:Interaction.Behaviors>
+                            </fa:ImageAwesome>
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <!--  コレクション コントロール (ItemsControl) は、データ オブジェクトを格納する「コンテナー要素」を生成し、そのコンテナー要素を並べて表示します。生成されるコンテナー要素は ItemsControl の派生クラスごとに異なり、例えば ListBox が生成するコンテナー要素は ListBoxItem、ComboBox が生成するコンテナー要素は ComboBoxItem です。  -->

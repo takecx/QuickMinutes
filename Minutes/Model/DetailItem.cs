@@ -37,14 +37,22 @@ namespace Minutes
             get { return this._ContentIndentLevel; }
             set { this.SetProperty(ref this._ContentIndentLevel, value); }
         }
+
+        private int _ParentAgendaIndex;
+        public int m_ParentAgendaIndex
+        {
+            get { return this._ParentAgendaIndex; }
+            set { this.SetProperty(ref this._ParentAgendaIndex, value); }
+        }
         #endregion
         public DetailItem()
         {
             m_ContentStateType = ContentStateType.none; //Set DefaultValue
         }
-        public DetailItem(int inIndex)
+        public DetailItem(int inDetailIndex,int inParentAgendaIndex)
         {
-            m_ContentIndex = inIndex;
+            m_ContentIndex = inDetailIndex;
+            m_ParentAgendaIndex = inParentAgendaIndex;
         }
     }
 }

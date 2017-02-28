@@ -11,11 +11,12 @@ using System.Windows.Interactivity;
 namespace Minutes.Actions
 {
     [TypeConstraint(typeof(ImageAwesome))]
-    class AddHumanAction : TargetedTriggerAction<ListBox>
+    class AddParticipantAction : TargetedTriggerAction<ListBox>
     {
         protected override void Invoke(object parameter)
         {
-            (this.Target.DataContext as MainWindowViewModel).AddNewParticipant();
+            (this.Target.DataContext as MainWindowViewModel).AddNewParticipant((this.Target.DataContext as MainWindowViewModel).m_Participants.Count);
+            //(this.Target.DataContext as MainWindowViewModel).AddNewParticipant((this.Target as ListBox).Items.Count);
         }
     }
 }

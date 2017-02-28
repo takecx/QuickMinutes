@@ -13,12 +13,14 @@ namespace Minutes.Model
     public class Participant
     {
         public string Name { get; set; }
-        public Participant(string inName) { Name = inName; }
+        public int Index { get; set; }
+        public Participant(string inName,int inIndex) { Name = inName;Index = inIndex; }
     }
     public class Writer
     {
         public string Name { get; set; }
-        public Writer(string inName) { Name = inName; }
+        public int Index { get; set; }
+        public Writer(string inName,int inIndex) { Name = inName;Index = inIndex; }
     }
 
     public class MinutesModel : BindableBase

@@ -6,30 +6,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Interactivity;
 using System.Windows.Input;
+using Minutes.Model;
 using System.Windows;
 
 namespace Minutes.Behaviors
 {
-    class DeleteAgendaBehavior : Behavior<ImageAwesome>
+    class DeleteParticipantAction : Behavior<ImageAwesome>
     {
         protected override void OnAttached()
         {
             base.OnAttached();
-            this.AssociatedObject.MouseDown += DeleteAgendaItem;
+            this.AssociatedObject.MouseDown += DeleteParticipant;
         }
 
         // 要素にデタッチされたときの処理。大体イベントハンドラの登録解除をここでやる
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            this.AssociatedObject.MouseDown -= DeleteAgendaItem;
+            this.AssociatedObject.MouseDown -= DeleteParticipant;
         }
 
-        private void DeleteAgendaItem(object sender, MouseButtonEventArgs e)
+        private void DeleteParticipant(object sender, MouseButtonEventArgs e)
         {
-            var viewModel = (Application.Current.MainWindow.DataContext as MainWindowViewModel);
-            //Modelを更新
-            viewModel.DeleteAgendaModel((this.AssociatedObject.DataContext as AgendaItem).m_AgendaIndex);
+            (Application.Current.MainWindow.DataContext as MainWindowViewModel).DeleteParticipantModel((this.AssociatedObject.DataContext as Participant).Index);
         }
     }
 }

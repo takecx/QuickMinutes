@@ -15,7 +15,7 @@ namespace Minutes.Actions
     {
         protected override void Invoke(object parameter)
         {
-            (this.Target.DataContext as MainWindowViewModel).AddNewWriter();
+            (this.Target.DataContext as MainWindowViewModel).AddNewWriter((this.Target as ListBox).Items.Count);
         }
     }
 }

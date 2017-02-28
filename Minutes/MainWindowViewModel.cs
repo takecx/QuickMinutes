@@ -192,23 +192,54 @@ namespace Minutes
             //return m_MinutesModel.m_Agendas[m_MinutesModel.m_Agendas.Count - 1];
         }
 
-        internal void AddNewParticipant()
+        internal void AddNewParticipant(int inIndex)
         {
-            var newParticipant = new Participant("");
+            var newParticipant = new Participant("", inIndex);
             //ViewModel
             _Participants.Add(newParticipant);
             //Model
             m_MinutesModel.m_Participants.Add(newParticipant);
         }
 
-        internal void AddNewWriter()
+        internal void AddNewWriter(int inIndex)
         {
-            var newWriter = new Writer("");
+            var newWriter = new Writer("", inIndex);
             //ViewModel
             _Writer.Add(newWriter);
             //Model
             m_MinutesModel.m_Writers.Add(newWriter);
         }
+        internal void DeleteAgendaModel(int inAgendaIndex)
+        {
+            m_MinutesModel.m_Agendas.RemoveAt(inAgendaIndex);   //Model
+            m_Agendas.RemoveAt(inAgendaIndex);                  //ViewModel
+            //残っているアジェンダのインデックスを更新
+            for (int i = 0; i < m_Agendas.Count; i++)
+            {
+                m_Agendas[i].m_AgendaIndex = i;
+            }
+        }
+        internal void DeleteParticipantModel(int inIndex)
+        {
+            m_MinutesModel.m_Participants.RemoveAt(inIndex);    //Model
+            m_Participants.RemoveAt(inIndex);                   //ViewModel
+            //残された参加者のインデックスを更新
+            for (int i = 0; i < m_Participants.Count; i++)
+            {
+                m_Participants[i].Index = i;
+            }
+        }
+        internal void DeleteWriter(int inIndex)
+        {
+            m_MinutesModel.m_Writers.RemoveAt(inIndex);    //Model
+            m_Writer.RemoveAt(inIndex);                   //ViewModel
+            //残された参加者のインデックスを更新
+            for (int i = 0; i < m_Writer.Count; i++)
+            {
+                m_Writer[i].Index = i;
+            }
+        }
+
     }
 
     public class AgendaContentConverter : IMultiValueConverter
