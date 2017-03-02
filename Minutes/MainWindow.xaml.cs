@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -23,6 +24,25 @@ namespace Minutes
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            var thumb = sender as Thumb;
+            if (thumb == null) return;
+
+            //親コントロールを探す
+            UIElement parent = (UIElement)thumb.Parent;
+            if (parent == null) return;
+
+            double x = Canvas.GetLeft(parent);
+            if (double.IsNaN(x)) x = 0;
+            double y = Canvas.GetTop(parent);
+            if (double.IsNaN(y)) y = 0;
+
+            //ドラッグ量に応じてThumbコントロールを移動する
+            Canvas.SetLeft(parent, x + e.HorizontalChange);
+            Canvas.SetTop(parent, y + e.VerticalChange);
         }
     }
 }

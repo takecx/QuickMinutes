@@ -140,9 +140,9 @@ namespace Minutes.Model
         /// <summary>
         /// 
         /// </summary>
-        public void SaveContents()
+        public void SaveContents(string inSaveFilePath)
         {
-            StreamWriter sWriter = new StreamWriter(m_ExportTextFileName);
+            StreamWriter sWriter = new StreamWriter(inSaveFilePath);
             using (sWriter)
             {
                 try

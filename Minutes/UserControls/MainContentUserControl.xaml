@@ -44,8 +44,9 @@
                 HorizontalAlignment="Stretch"
                 FontSize="35"
                 Style="{StaticResource HilightTextBox}"
-                Text="{Binding m_Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <fa:ImageAwesome Icon="TrashOutline" Height="20" Width="20" Grid.Column="2" >
+                Text="{Binding m_Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                TextWrapping="Wrap"/>
+            <fa:ImageAwesome Icon="TrashOutline" Height="20" Width="20" Grid.Column="2" Style="{StaticResource HilightImageAwesome}" >
                 <i:Interaction.Behaviors>
                     <beh:DeleteAgendaBehavior />
                 </i:Interaction.Behaviors>
@@ -64,7 +65,7 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <local:DetailContentUserControl Margin="50,0,0,0" Padding="5"/>
+                    <local:DetailContentUserControl Margin="40,0,0,0" Padding="5"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
@@ -80,7 +81,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <fa:ImageAwesome Height="20" Margin="50,0,0,10" HorizontalAlignment="Left" Icon="PlusCircle">
+        <fa:ImageAwesome Height="20" Margin="50,0,0,10" HorizontalAlignment="Left" Icon="PlusCircle" Style="{StaticResource HilightImageAwesome}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDown">
                     <act:AddDetailAction TargetName="MainContentStackPanel" />

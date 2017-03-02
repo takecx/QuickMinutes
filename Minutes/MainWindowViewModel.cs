@@ -1,4 +1,5 @@
-﻿using Minutes.Model;
+﻿using Microsoft.Win32;
+using Minutes.Model;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -153,9 +154,15 @@ namespace Minutes
             };
         }
 
-        private void SaveMinutes()
+        public void SaveMinutes()
         {
-            m_MinutesModel.SaveContents();
+            var saveDialog = new SaveFileDialog();
+            saveDialog.Title = "Save File";
+            saveDialog.Filter = "テキストファイル|*.txt";
+            if(saveDialog.ShowDialog() == true)
+            {
+                m_MinutesModel.SaveContents(saveDialog.FileName);
+            }
         }
 
         private bool CanSaveMinutes()

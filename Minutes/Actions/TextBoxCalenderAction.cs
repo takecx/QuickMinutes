@@ -36,6 +36,7 @@ namespace Minutes.Actions
                 if(control.GetType() == typeof(Calendar))
                 {
                     (control as Calendar).Visibility = System.Windows.Visibility.Visible;
+                    (control as Calendar).Focus();
                 }
             }
         }
@@ -58,13 +59,6 @@ namespace Minutes.Actions
             {
                 return;
             }
-
-            //// AssociatedObjectはDependencyObject型なので、必要ならキャスト
-            //var source = (TextBox)this.AssociatedObject;
-
-            //// Targetは型パラメーターで指定した型Tなので、キャストは不要
-            //source.Text = (this.Target.Children[this.Target.Children.Count - 1] as Calendar).SelectedDate.ToString();
-            //this.Target.Children.RemoveAt(this.Target.Children.Count - 1);
 
             // AssociatedObjectはDependencyObject型なので、必要ならキャスト
             var source = (Calendar)this.AssociatedObject;

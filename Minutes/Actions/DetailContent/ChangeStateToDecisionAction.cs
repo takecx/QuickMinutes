@@ -29,7 +29,8 @@ namespace Minutes.Actions.DetailContent
             {
                 //Change Bullet
                 this.Target.Icon = FontAwesomeIcon.CheckCircleOutline;
-                this.Target.Width = 15;
+                this.Target.Height = 20;
+                this.Target.Width = 20;
                 this.Target.Foreground = new SolidColorBrush(Color.FromArgb(255, 48, 180, 255));
 
                 //Change model

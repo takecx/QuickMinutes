@@ -88,6 +88,7 @@
     <Compile Include="Behaviors\DeleteDetailBehavior.cs" />
     <Compile Include="Behaviors\DeleteParticipantAction.cs" />
     <Compile Include="Behaviors\DeleteWriterAction.cs" />
+    <Compile Include="Behaviors\SaveFileBehavior.cs" />
     <Compile Include="UserControls\DetailContentUserControl.xaml.cs">
       <DependentUpon>DetailContentUserControl.xaml</DependentUpon>
     </Compile>

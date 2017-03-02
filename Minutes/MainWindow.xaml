@@ -12,7 +12,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:usr="clr-namespace:Minutes.UserControls"
     Title="Minutes"
-    Width="556"
+    Width="600"
     Height="456"
     Background="#FF1B1B1C"
     mc:Ignorable="d">
@@ -42,13 +42,15 @@
                 </i:Interaction.Behaviors>
             </TextBox>
         </DataTemplate>
+        <SolidColorBrush Color="#FF8F8F8F" x:Key="BorderColor"/>
+        <SolidColorBrush Color="#FFC7C7C7" x:Key="IconColor"/>
     </Window.Resources>
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
-    <Grid x:Name="MainGrid" Focusable="True">
+    <Grid x:Name="MainGrid" Focusable="True" Background="{StaticResource MainBackgroundColor}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="51" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="38" />
             <RowDefinition Height="38" />
             <RowDefinition Height="39" />
@@ -60,16 +62,31 @@
             <ColumnDefinition Width="185" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,1" Grid.Column="1" Height="115" Grid.Row="1" Grid.RowSpan="3" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
         <ScrollViewer
             Grid.Row="4"
             Grid.Column="1"
             Grid.ColumnSpan="3"
-            Background="GreenYellow">
+            VerticalScrollBarVisibility="Hidden"
+            Background="{StaticResource MainBackgroundColor}" BorderBrush="Black" BorderThickness="1,0,0,0"
+            >
             <StackPanel>
-                <ListView x:Name="MainContentsListView" ItemsSource="{Binding m_Agendas}">
+                <ListView x:Name="MainContentsListView" ItemsSource="{Binding m_Agendas}" BorderBrush="{x:Null}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel/>
+                            <!--<Canvas/>-->
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <usr:MainContentUserControl />
+                            <Thumb DragDelta="Thumb_DragDelta" Name="mark">
+                                <Thumb.Template>
+                                    <ControlTemplate>
+                                        <usr:MainContentUserControl />
+                                    </ControlTemplate>
+                                </Thumb.Template>
+                            </Thumb>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListBox.Template>
@@ -92,9 +109,10 @@
                 </ListView>
                 <fa:ImageAwesome
                     Height="20"
+                    Style="{StaticResource HilightImageAwesome}"
                     HorizontalAlignment="Left"
                     Icon="PlusCircle"
-                    Margin="5">
+                    Margin="10">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDown">
                             <act:AddAgendaAction TargetName="MainContentsListView" />
@@ -103,48 +121,49 @@
                 </fa:ImageAwesome>
             </StackPanel>
         </ScrollViewer>
-        <Rectangle
-            Grid.Row="0"
-            Grid.RowSpan="4"
-            Grid.Column="1"
-            Grid.ColumnSpan="3"
-            Height="166"
-            VerticalAlignment="Center"
-            Fill="#FFB4DCFF" />
         <TextBox
             Grid.Column="1"
             Grid.ColumnSpan="3"
             Height="37"
-            Margin="10,7,50,7"
+            Margin="10,7,40,7"
             VerticalAlignment="Center"
             FontSize="18"
             Style="{StaticResource HilightTextBox}"
             Text="{Binding m_Title, Mode=TwoWay}"
-            UseLayoutRounding="False" />
-        <Button
+            UseLayoutRounding="False" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}" />
+        <!--<Button
             Grid.Row="0"
             Grid.Column="3"
             Width="50"
             HorizontalAlignment="Right"
             Background="{x:Null}"
             BorderBrush="{x:Null}"
-            Command="{Binding SaveMinutesCommand}">
-            <fa:ImageAwesome
+            Command="{Binding SaveMinutesCommand}">-->
+        <fa:ImageAwesome
                 Width="20"
                 Height="20"
+                Grid.Row="0"
+                Grid.Column="3"
                 Icon="Save"
-                RenderTransformOrigin="0.5,0.5">
-                <fa:ImageAwesome.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform />
-                        <SkewTransform />
-                        <RotateTransform Angle="23.199" />
-                        <TranslateTransform />
-                    </TransformGroup>
-                </fa:ImageAwesome.RenderTransform>
-            </fa:ImageAwesome>
-        </Button>
+                Margin="0,0,10,0"
+                HorizontalAlignment="Right"
+                RenderTransformOrigin="0.5,0.5"
+                Style="{StaticResource HilightImageAwesome}">
+            <i:Interaction.Behaviors>
+                <beh:SaveFileBehavior />
+            </i:Interaction.Behaviors>
+            <fa:ImageAwesome.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="23.199" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </fa:ImageAwesome.RenderTransform>
+        </fa:ImageAwesome>
+        <!--</Button>-->
         <fa:ImageAwesome
+            Foreground="{StaticResource IconColor}"
             Grid.Row="1"
             Grid.Column="1"
             Width="24"
@@ -164,14 +183,11 @@
             VerticalAlignment="Center"
             Style="{StaticResource HilightTextBox}"
             Text="{Binding m_Day, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            TextWrapping="Wrap">
+            TextWrapping="Wrap" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <act:TextBoxCalenderAction TargetName="MainGrid" />
                 </i:EventTrigger>
-                <!--<i:EventTrigger EventName="LostFocus">
-                    <act:TextBoxCalenderBanishAction TargetName="MainGrid" />
-                </i:EventTrigger>-->
             </i:Interaction.Triggers>
         </TextBox>
         <!--<TextBox Style="{StaticResource HilightTextBox}" Height="23" Width="50" Margin="35,40,0,0" TextWrapping="Wrap" Text="{Binding m_Day,Mode=TwoWay}" VerticalAlignment="Top"/>-->
@@ -183,7 +199,7 @@
             Margin="10,10,0,4"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Icon="ClockOutline" />
+            Icon="ClockOutline" Foreground="{DynamicResource IconColor}" />
         <TextBlock
             Grid.Row="1"
             Grid.Column="2"
@@ -201,7 +217,7 @@
             Margin="10,10,0,4"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Icon="BuildingOutline" />
+            Icon="BuildingOutline" Foreground="{DynamicResource IconColor}" />
         <TextBox
             Grid.Row="1"
             Grid.Column="3"
@@ -213,7 +229,7 @@
             VerticalAlignment="Center"
             Style="{StaticResource HilightTextBox}"
             Text="{Binding m_Room, Mode=TwoWay}"
-            TextWrapping="Wrap">
+            TextWrapping="Wrap" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}">
             <i:Interaction.Behaviors>
                 <beh:FitTextBoxWidthBehavior />
             </i:Interaction.Behaviors>
@@ -227,7 +243,7 @@
             Margin="10,10,0,4"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Icon="Users" />
+            Icon="Users" Foreground="{DynamicResource IconColor}" />
         <StackPanel
             Grid.Row="2"
             Grid.Column="1"
@@ -253,7 +269,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                        <TextBox
+                            <TextBox
                             Height="22"
                             MinWidth="50"
                             Margin="0,0,0,0"
@@ -285,6 +301,7 @@
             </ListBox>
             <fa:ImageAwesome
                 Height="20"
+                Style="{StaticResource HilightImageAwesome}"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Icon="PlusCircle">
@@ -304,7 +321,7 @@
             Margin="10,10,0,7"
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
-            Icon="Pencil" />
+            Icon="Pencil" Foreground="{DynamicResource IconColor}" />
         <StackPanel
             Grid.Row="3"
             Grid.Column="1"
@@ -333,7 +350,6 @@
                             <TextBox
                             Height="22"
                             MinWidth="50"
-                            Margin="0,0,10,0"
                             FontSize="12"
                             Style="{StaticResource HilightTextBox}"
                             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -362,6 +378,7 @@
             </ListBox>
             <fa:ImageAwesome
                 Height="20"
+                Style="{StaticResource HilightImageAwesome}"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Icon="PlusCircle">
@@ -415,13 +432,79 @@
                 <i:EventTrigger EventName="SelectedDatesChanged">
                     <act:TextBoxCalenderBanishAction TargetName="MainGrid" />
                 </i:EventTrigger>
+                <i:EventTrigger EventName="LostFocus">
+                    <act:TextBoxCalenderBanishAction TargetName="MainGrid" />
+                </i:EventTrigger>
             </i:Interaction.Triggers>
         </Calendar>
-        <ScrollViewer
+        <!--<ScrollViewer
             Grid.RowSpan="5"
             Grid.Column="0"
-            MaxWidth="200"
+            MaxWidth="119"
             Background="#FFD4B0B0"
-            VerticalScrollBarVisibility="Auto" />
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled">-->
+        <Grid
+            Width="119"
+            Grid.RowSpan="5"
+            Grid.Column="0">
+            <ListBox ItemsSource="{Binding m_Agendas}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{StaticResource MainBackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,1,1">
+                <!--<ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>-->
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ContentControl">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="{Binding m_AgendaIndex}"/>
+                                    <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <!--<Label Content="{Binding m_Content}"/>-->
+                                </StackPanel>
+                                <ListBox ItemsSource="{Binding m_DetailItems}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderBrush="{x:Null}" Background="{StaticResource MainBackgroundColor}">
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="OverridesDefaultStyle" Value="True" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ContentControl">
+                                                        <ContentPresenter />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Label Content="・"/>
+                                                    <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        <!--</ScrollViewer>-->
     </Grid>
 </Window>
