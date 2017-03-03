@@ -43,6 +43,8 @@
                 VerticalContentAlignment="Center"
                 HorizontalAlignment="Stretch"
                 FontSize="35"
+                Background="{StaticResource TextBackgroundColor}"
+                Foreground="{StaticResource TextForegroundColor}"
                 Style="{StaticResource HilightTextBox}"
                 Text="{Binding m_Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap"/>

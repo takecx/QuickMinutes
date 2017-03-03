@@ -7,7 +7,9 @@
     <Application.Resources>
         <SolidColorBrush Color="#FF2D2D30" x:Key="MainBackgroundColor"/>
         <SolidColorBrush Color="#FF3F3F46" x:Key="TextBackgroundColor"/>
-        <SolidColorBrush Color="#FFF1F2F7" x:Key="TextForegroundColor"/> 
+        <SolidColorBrush Color="#FFF1F2F7" x:Key="TextForegroundColor"/>
+        <SolidColorBrush Color="#FF808080" x:Key="UnselectColor"/>
+        <SolidColorBrush Color="#FF4E4E74" x:Key="HilightColor"/>
         <Style x:Key="HilightTextBox" TargetType="{x:Type TextBox}">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -15,7 +17,7 @@
                 <EventTrigger RoutedEvent="UIElement.MouseEnter">
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Yellow" Duration="0:0:0.2"/>
+                            <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#FF4E4E74" Duration="0:0:0.2"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
@@ -28,8 +30,26 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style> 
-        <SolidColorBrush Color="#FF808080" x:Key="UnselectColor"/>
         <Style x:Key="HilightImageAwesome" TargetType="{x:Type fa:ImageAwesome}">
+            <Setter Property="Foreground" Value="{StaticResource ResourceKey=UnselectColor}"/>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="Black" Duration="0:0:0.05"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="#FF808080" Duration="0:0:0.05"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="SaveIcon" TargetType="{x:Type fa:ImageAwesome}">
             <Setter Property="Foreground" Value="{StaticResource ResourceKey=UnselectColor}"/>
             <Style.Triggers>
                 <EventTrigger RoutedEvent="UIElement.MouseEnter">

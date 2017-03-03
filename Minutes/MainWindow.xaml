@@ -274,6 +274,8 @@
                             MinWidth="50"
                             Margin="0,0,0,0"
                             FontSize="12"
+                            Background="{StaticResource TextBackgroundColor}"
+                            Foreground="{StaticResource TextForegroundColor}"
                             Style="{StaticResource HilightTextBox}"
                             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <fa:ImageAwesome Icon="Times" Height="10" Width="10" Margin="0,0,5,0" Foreground="{StaticResource ResourceKey=UnselectColor}" Style="{StaticResource HilightImageAwesome}">
@@ -351,6 +353,8 @@
                             Height="22"
                             MinWidth="50"
                             FontSize="12"
+                                Background="{StaticResource TextBackgroundColor}"
+                                Foreground="{StaticResource TextForegroundColor}"
                             Style="{StaticResource HilightTextBox}"
                             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <fa:ImageAwesome Icon="Times" Height="10" Width="10" Margin="0,0,5,0" Foreground="{StaticResource ResourceKey=UnselectColor}" Style="{StaticResource HilightImageAwesome}">
