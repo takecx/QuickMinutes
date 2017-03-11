@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -24,7 +26,19 @@ namespace Minutes
         public MainWindow()
         {
             InitializeComponent();
+            Messenger.Instance.GetEvent<PubSubEvent<bool>>().Subscribe(
+                d => {
+                    if(d == true)
+                    {
+                        //Invokeを使ってUIスレッドから実行する必要がある
+                        saveIcon.Dispatcher.BeginInvoke(
+                            new Action(() => { (saveIcon.Resources["HilightSaveIconAnimation"] as Storyboard).Begin(); })
+                            );
+                    }
+                }
+                );
         }
+
 
         private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {

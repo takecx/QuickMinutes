@@ -241,7 +241,7 @@
                 </i:Interaction.Triggers>
             </StackPanel>
         </StackPanel>
-        <fa:ImageAwesome Icon="Circle" x:Name="BulletLabel" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="8" Height="8"/>
+        <fa:ImageAwesome Icon="Circle" x:Name="BulletLabel" Foreground="{StaticResource TextForegroundColor}" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="8" Height="8"/>
         <fa:ImageAwesome Icon="TrashOutline" Grid.Row="0" Grid.Column="4" Style="{StaticResource HilightImageAwesome}" Margin="7,0,6,0">
             <i:Interaction.Behaviors>
                 <beh:DeleteDetailBehavior />

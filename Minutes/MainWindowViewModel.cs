@@ -1,13 +1,18 @@
 ﻿using Microsoft.Win32;
 using Minutes.Model;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -120,18 +125,15 @@ namespace Minutes
                 m_MinutesModel.m_Agendas = value;
             }
         }
-
-        //private ObservableCollection<DetailItem> _Details;
-        //public ObservableCollection<DetailItem> m_Details
-        //{
-        //    get { return this._Details; }
-        //    set { this.SetProperty(ref this._Details, value); }
-        //}
+        public ReactiveProperty<bool> m_IsInstantSaveExecuting { get; }
 
         #endregion
 
         #region コマンド一覧
         public DelegateCommand SaveMinutesCommand { get; private set; }
+        public DelegateCommand StartInstantSaveCommand { get; private set; }
+        public ReactiveCommand InstantSaveMinutesCommand { get; }
+        //public DelegateCommand InstantSaveMinutesCommand { get; private set; }
         #endregion
 
         public List<string> m_SelectableTimeList{ get;set; }
@@ -142,6 +144,18 @@ namespace Minutes
         public MainWindowViewModel()
         {
             this.SaveMinutesCommand = new DelegateCommand(SaveMinutes, CanSaveMinutes);
+            this.StartInstantSaveCommand = new DelegateCommand(StartInstantSave,CanStartInstantSave);
+            //this.InstantSaveMinutesCommand = new DelegateCommand(InstantSaveMinutes, CanInstantSaveMinutes);
+
+            //m_MinutesModelのm_IsInstantSaveExecutingと双方向バインディングする
+            m_IsInstantSaveExecuting = m_MinutesModel.ToReactivePropertyAsSynchronized(x => x.m_IsInstantSaveExecuting);
+            //どのタイミングでCanExecute()がtrueになるかを設定（今回は常に実行可能にしとく）
+            InstantSaveMinutesCommand = m_IsInstantSaveExecuting.Select(e => true).ToReactiveCommand();
+            //実際のコマンドを登録（メッセンジャー経由でViewとViewModel間でやりとりできるようにする）
+            InstantSaveMinutesCommand.Subscribe(
+                _ => Messenger.Instance
+                    .GetEvent<PubSubEvent<bool>>().Publish(m_MinutesModel.InstantSaveContents()));
+
             m_SelectableTimeList = new List<string> {
             "07:00","07:15","07:30","07:45","08:00","08:15","08:30","08:45",
             "09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45",
@@ -153,6 +167,69 @@ namespace Minutes
             "20:00","20:15","20:30","20:45","21:00","21:15","21:30","21:45",
             };
         }
+
+        ~MainWindowViewModel()
+        {
+          if(m_IsInstantSaveExecuting.Value == true)
+            {
+                //落ちる前に保存する
+                m_MinutesModel.InstantSaveContents();
+            }  
+        }
+
+        private void StartInstantSave()
+        {
+            if (m_MinutesModel.m_IsInstantSaveExecuting == false)
+            {
+                m_MinutesModel.m_IsInstantSaveExecuting = true;
+                Task.Run(() =>
+                {
+                    while (m_MinutesModel.m_IsInstantSaveExecuting == true)
+                    {
+                        InstantSaveMinutesCommand.Execute();
+                        //設定された時間だけスリープ(設定は秒でおこなってもらう)
+                        Thread.Sleep(Properties.Settings.Default.InstantSaveTimeSpan * 1000);
+                    }
+                });
+            }
+        }
+
+        private bool CanStartInstantSave()
+        {
+            return true;
+        }
+
+        //private bool StartInstantSave()
+        //{
+        //    if(m_MinutesModel.m_IsInstantSaveExecuting == false)
+        //    {
+        //        Task.Run(() => {
+        //            while(m_MinutesModel.m_IsInstantSaveExecuting == true)
+        //            {
+                        
+        //            }
+        //            InstantSaveMinutesCommand.Execute();
+        //        });
+        //        return m_MinutesModel.InstantSaveContents();
+        //    }
+        //    else
+        //    {
+        //        return true;
+        //    }
+        //}
+
+        #region DelegateCommand版
+        //private bool CanInstantSaveMinutes()
+        //{
+        //    //とりあえず常に実行可能にしとく
+        //    return true;
+        //}
+
+        //private void InstantSaveMinutes()
+        //{
+        //    m_MinutesModel.InstantSaveContents();
+        //}
+        #endregion
 
         public void SaveMinutes()
         {

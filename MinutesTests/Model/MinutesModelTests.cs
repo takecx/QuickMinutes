@@ -14,6 +14,21 @@ namespace Minutes.Model.Tests
     public class MinutesModelTests
     {
         [TestMethod()]
+        public void ConvertToRealMinutesName()
+        {
+            MinutesModel model = new MinutesModel();
+            model.m_Title = "Title";
+            model.m_Day = new DateTime(2017, 3, 7); //2017/03/07
+            model.m_StartTime = new DateTime(2000, 1, 1, 12, 0, 0); //2000/01/01 12:00.00
+            model.m_EndTime = new DateTime(2000, 1, 1, 13, 0, 0); //2000/01/01 13:00.00
+            model.m_Room = "Room1";
+
+            string convertTarget = "%Title%_%Day%_%StartTime%-%EndTime%_%Room%";
+            string convertedExpectedName = "Title_20170307_12:00-13:00_Room1";
+            Assert.AreEqual(convertedExpectedName, model.AsDynamic().ConvertToRealMinutesName(convertTarget));
+        }
+
+        [TestMethod()]
         public void GenerateContentSeparatorTest()
         {
             MinutesModel model = new MinutesModel();
@@ -44,7 +59,7 @@ namespace Minutes.Model.Tests
             MinutesModel model = new MinutesModel();
             model.m_StartTime = new DateTime(2000,1,2,3,4,5);
             model.m_EndTime = new DateTime(2001, 6, 7, 8, 9, 10);
-            string expected = "[Time]03:04:05 ~ 08:09:10\n";
+            string expected = "[Time]03:04 ~ 08:09\n";
             Assert.AreEqual(expected, model.AsDynamic().GenerateExportTimeContent());
         }
         [TestMethod()]
@@ -180,7 +195,7 @@ namespace Minutes.Model.Tests
             string expected =   "*********************************************************\n" + 
                                 "[Title]title\n" +
                                 "[Day]2017/02/01\n" +
-                                "[Time]03:04:05 ~ 08:09:10\n" + 
+                                "[Time]03:04 ~ 08:09\n" + 
                                 "[Room]room1\n" +
                                 "[Participants]participant1,participant2,participant3\n" +
                                 "[Writers]writer1,writer2\n" +

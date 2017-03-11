@@ -11,11 +11,15 @@
     xmlns:local="clr-namespace:Minutes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:usr="clr-namespace:Minutes.UserControls"
-    Title="Minutes"
+    Title="QuickMinutes"
     Width="600"
     Height="456"
     Background="#FF1B1B1C"
     mc:Ignorable="d">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding SaveMinutesCommand}" Gesture="Ctrl+Shift+S"/>
+        <KeyBinding Command="{Binding StartInstantSaveCommand}" Gesture="Ctrl+S"/>
+    </Window.InputBindings>
     <Window.Resources>
         <Style x:Key="myStyle" TargetType="ListBox">
             <Setter Property="Template">
@@ -425,16 +429,9 @@
             FontSize="18"
             Style="{StaticResource HilightTextBox}"
             Text="{Binding m_Title, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-            UseLayoutRounding="False" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}" ToolTip="Title" />
-        <!--<Button
-            Grid.Row="0"
-            Grid.Column="3"
-            Width="50"
-            HorizontalAlignment="Right"
-            Background="{x:Null}"
-            BorderBrush="{x:Null}"
-            Command="{Binding SaveMinutesCommand}">-->
+            UseLayoutRounding="False" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}" ToolTip="Title" TabIndex="1" />
         <fa:ImageAwesome
+                x:Name="saveIcon"
                 Width="20"
                 Height="20"
                 Grid.Row="0"
@@ -443,7 +440,15 @@
                 Margin="0,0,10,0"
                 HorizontalAlignment="Right"
                 RenderTransformOrigin="0.5,0.5"
-                Style="{StaticResource HilightImageAwesome}" ToolTip="Save">
+                ToolTip="Save">
+            <fa:ImageAwesome.Foreground>
+                <SolidColorBrush x:Name="myAnimatedBrush" Color="#FFC7C7C7" />
+            </fa:ImageAwesome.Foreground>
+            <fa:ImageAwesome.Resources>
+                <Storyboard x:Key="HilightSaveIconAnimation">
+                    <ColorAnimation Storyboard.TargetName="myAnimatedBrush" Storyboard.TargetProperty="Color" From="#FFC7C7C7" To="#FF38EC92" AutoReverse="True" Duration="0:0:0.5"/>
+                </Storyboard>
+            </fa:ImageAwesome.Resources>
             <i:Interaction.Behaviors>
                 <beh:SaveFileBehavior />
             </i:Interaction.Behaviors>
@@ -525,7 +530,7 @@
             VerticalAlignment="Bottom"
             Style="{StaticResource HilightTextBox}"
             Text="{Binding m_Room, Mode=TwoWay}"
-            TextWrapping="Wrap" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}">
+            TextWrapping="Wrap" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}" TabIndex="5">
             <i:Interaction.Behaviors>
                 <beh:FitTextBoxWidthBehavior />
             </i:Interaction.Behaviors>
@@ -700,7 +705,7 @@
             VerticalAlignment="Bottom"
             IsEditable="True"
             ItemsSource="{Binding m_SelectableTimeList}"
-            Text="{Binding m_StartTime}" Style="{DynamicResource TimePickerComboBoxStyle}" ToolTip="Start Time" >
+            Text="{Binding m_StartTime}" Style="{DynamicResource TimePickerComboBoxStyle}" ToolTip="Start Time" TabIndex="3" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Foreground="{StaticResource TextForegroundColor}" Text="{Binding}"/>
@@ -719,7 +724,7 @@
             IsEditable="True"
             ItemsSource="{Binding m_SelectableTimeList}"
             Style="{DynamicResource TimePickerComboBoxStyle}"
-            Text="{Binding m_EndTime}" BorderBrush="{x:Null}" ToolTip="End Time" >
+            Text="{Binding m_EndTime}" BorderBrush="{x:Null}" ToolTip="End Time" TabIndex="4" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Foreground="{StaticResource TextForegroundColor}" Text="{Binding}"/>
@@ -738,7 +743,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Focusable="False"
-            Visibility="Hidden">
+            Visibility="Hidden" TabIndex="2">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedDatesChanged">
                     <act:TextBoxCalenderBanishAction TargetName="MainGrid" />
@@ -786,8 +791,8 @@
                                 <StackPanel Orientation="Vertical">
                                     <StackPanel Orientation="Horizontal">
                                         <Label Content="{Binding m_AgendaIndex}" Foreground="{StaticResource TextForegroundColor}"/>
-                                        <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>
-                                        <!--<Label Content="{Binding m_Content}"/>-->
+                                        <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>
+                                            <!--<Label Content="{Binding m_Content}"/>-->
                                     </StackPanel>
                                     <ListBox ItemsSource="{Binding m_DetailItems}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderBrush="{x:Null}" Background="{StaticResource MainBackgroundColor}">
                                         <ListBox.ItemContainerStyle>

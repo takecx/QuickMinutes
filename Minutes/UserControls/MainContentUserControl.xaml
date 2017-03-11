@@ -28,12 +28,14 @@
                    Content="{Binding m_AgendaIndex}"
                    Grid.Column="0"
                    VerticalAlignment="Center"
+                   Foreground="{StaticResource TextForegroundColor}"
                    HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"/>
             <fa:ImageAwesome
                 Grid.Column="0"
                 Height="30"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
+                Foreground="{StaticResource TextForegroundColor}"
                 Icon="CircleOutline" />
             <!--  ValueConverterを使用してリスト中の該当する文字列を表示するように変更する  -->
             <TextBox

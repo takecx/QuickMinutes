@@ -82,59 +82,25 @@ namespace Minutes.Model
             get { return this._Agendas; }
             set { this.SetProperty(ref this._Agendas, value); }
         }
-
-        private string _ExportTextFileName;
-        public string m_ExportTextFileName
+        private bool _IsInstantSaveExecuting;
+        public bool m_IsInstantSaveExecuting
         {
-            get { return this._ExportTextFileName; }
-            set { this.SetProperty(ref this._ExportTextFileName, value); }
+            get { return this._IsInstantSaveExecuting; }
+            set { this.SetProperty(ref this._IsInstantSaveExecuting, value); }
         }
         #endregion
 
+        private string m_InstantSaveMinutesName = "";
+        private const string K_TITLE = "%Title%";
+        private const string K_DAY = "%Day%";
+        private const string K_STARTTIME = "%StartTime%";
+        private const string K_ENDTIME = "%EndTime%";
+        private const string K_ROOM = "%Room%";
+
         public MinutesModel()
         {
-            #region for Function Test
-            //m_Title = "test title";
-            //m_Day = System.DateTime.Today;
-            //m_StartTime = DateTime.Now;
-            ////m_StartTime = new DateTime(2000, 1, 2, 3, 4, 5);
-            //m_EndTime = new DateTime(2001, 6, 7, 8, 9, 10);
-            //m_Room = "room1";
-            //m_Participants = new ObservableCollection<string> { "person1", "person2", "person3" };
-            //m_Writers = new ObservableCollection<string> { "person1", "person3" };
-            //m_Agendas = new System.Collections.ObjectModel.ObservableCollection<AgendaItem>();
-            //AgendaItem agenda1 = new AgendaItem(1);
-            //agenda1.m_AgendaIndex = 1;
-            //agenda1.m_Content = "agenda1 content";
-            //agenda1.m_DetailItems = new System.Collections.ObjectModel.ObservableCollection<DetailItem>();
-            //DetailItem detail1 = new DetailItem();
-            //detail1.m_ContentIndex = 1;
-            //detail1.m_ContentIndentLevel = 1;
-            //detail1.m_Content = "agenda1->detail1 content";
-            //detail1.m_ContentStateType = ContentStateType.decided;
-            //agenda1.m_DetailItems.Add(detail1);
-            //DetailItem detail2 = new DetailItem();
-            //detail2.m_ContentIndex = 2;
-            //detail2.m_ContentIndentLevel = 2;
-            //detail2.m_Content = "agenda1->detail2 content";
-            //detail2.m_ContentStateType = ContentStateType.important;
-            //agenda1.m_DetailItems.Add(detail2);
-            //DetailItem detail3 = new DetailItem();
-            //detail3.m_ContentIndex = 3;
-            //detail3.m_ContentIndentLevel = 3;
-            //detail3.m_Content = "agenda1->detail3 content";
-            //detail3.m_ContentStateType = ContentStateType.issue;
-            //agenda1.m_DetailItems.Add(detail3);
-            //DetailItem detail4 = new DetailItem();
-            //detail4.m_ContentIndex = 4;
-            //detail4.m_ContentIndentLevel = 3;
-            //detail4.m_Content = "agenda1->detail4 content";
-            //detail4.m_ContentStateType = ContentStateType.none;
-            //agenda1.m_DetailItems.Add(detail4);
-            //m_Agendas.Add(agenda1);
-
-            m_ExportTextFileName = @"C:\Users\takeshi\Desktop\exported.txt";
-            #endregion
+            //Create InstantSave Directory if not exist
+            Directory.CreateDirectory(Properties.Settings.Default.InstantSaveDir);
         }
 
         /// <summary>
@@ -154,6 +120,42 @@ namespace Minutes.Model
                     MessageBox.Show(e.Message);
                 }
             }
+        }
+
+        public bool InstantSaveContents()
+        {
+            try{
+                _IsInstantSaveExecuting = true;
+                //Delete minutes if filename change
+                string previousMinutesName = m_InstantSaveMinutesName;
+                m_InstantSaveMinutesName = Properties.Settings.Default.InstantSaveDir + ConvertToRealMinutesName(Properties.Settings.Default.InstantSaveMinutesName) + ".txt";
+                if (previousMinutesName != m_InstantSaveMinutesName && previousMinutesName != "")
+                {
+                    File.Delete(previousMinutesName);
+                    return false;
+                }
+                //Save new minutes
+                SaveContents(m_InstantSaveMinutesName);
+                return m_IsInstantSaveExecuting;
+            }
+            catch (System.Exception e)
+            {
+                MessageBox.Show(e.Message, e.GetType().ToString() + " occured.");
+                return false;
+            }
+            finally
+            {
+            }
+        }
+
+        private string ConvertToRealMinutesName(string instantSaveMinutesName)
+        {
+            string result = instantSaveMinutesName.Replace(K_TITLE, m_Title);
+            result = result.Replace(K_DAY, m_Day.ToString("yyyyMMdd"));
+            result = result.Replace(K_STARTTIME, m_StartTime.ToString("HH:mm"));
+            result = result.Replace(K_ENDTIME, m_EndTime.ToString("HH:mm"));
+            result = result.Replace(K_ROOM, m_Room);
+            return result;
         }
 
         private string GenerateTextFileContents()
@@ -260,7 +262,7 @@ namespace Minutes.Model
 
         private string GenerateExportTimeContent()
         {
-            return "[Time]" + m_StartTime.ToString("hh:mm:ss") + " ~ " + m_EndTime.ToString("hh:mm:ss") + NEWLINE;
+            return "[Time]" + m_StartTime.ToString("HH:mm") + " ~ " + m_EndTime.ToString("HH:mm") + NEWLINE;
         }
 
         private string GenerateExportTitleContent()
