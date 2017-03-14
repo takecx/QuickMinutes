@@ -10,6 +10,7 @@
         <SolidColorBrush Color="#FFF1F2F7" x:Key="TextForegroundColor"/>
         <SolidColorBrush Color="#FF808080" x:Key="UnselectColor"/>
         <SolidColorBrush Color="#FF4E4E74" x:Key="HilightColor"/>
+        <SolidColorBrush Color="#FFC7C7C7" x:Key="IconColor"/>
         <Style x:Key="HilightTextBox" TargetType="{x:Type TextBox}">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>

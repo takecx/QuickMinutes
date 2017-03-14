@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Minutes
@@ -127,17 +128,29 @@ namespace Minutes
         }
         public ReactiveProperty<bool> m_IsInstantSaveExecuting { get; }
 
+        private bool _PortIsOpen;
+        public bool m_PortIsOpen
+        {
+            get { return this._PortIsOpen; }
+            set
+            {
+                this.SetProperty(ref this._PortIsOpen, value);
+            }
+        }
+
         #endregion
 
         #region コマンド一覧
         public DelegateCommand SaveMinutesCommand { get; private set; }
         public DelegateCommand StartInstantSaveCommand { get; private set; }
+        public DelegateCommand ChangeToggleSwitchCommand { get; }
         public ReactiveCommand InstantSaveMinutesCommand { get; }
-        //public DelegateCommand InstantSaveMinutesCommand { get; private set; }
         #endregion
 
         public List<string> m_SelectableTimeList{ get;set; }
 
+        private CancellationTokenSource _TokenSource = null;
+        private Task _InstantSaveTask;
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -145,7 +158,7 @@ namespace Minutes
         {
             this.SaveMinutesCommand = new DelegateCommand(SaveMinutes, CanSaveMinutes);
             this.StartInstantSaveCommand = new DelegateCommand(StartInstantSave,CanStartInstantSave);
-            //this.InstantSaveMinutesCommand = new DelegateCommand(InstantSaveMinutes, CanInstantSaveMinutes);
+            this.ChangeToggleSwitchCommand = new DelegateCommand(ChangeToggleSwitch, CanChangeToggleSwitch);
 
             //m_MinutesModelのm_IsInstantSaveExecutingと双方向バインディングする
             m_IsInstantSaveExecuting = m_MinutesModel.ToReactivePropertyAsSynchronized(x => x.m_IsInstantSaveExecuting);
@@ -155,6 +168,7 @@ namespace Minutes
             InstantSaveMinutesCommand.Subscribe(
                 _ => Messenger.Instance
                     .GetEvent<PubSubEvent<bool>>().Publish(m_MinutesModel.InstantSaveContents()));
+            //ChangeToggleSwitchCommand.Subscribe();
 
             m_SelectableTimeList = new List<string> {
             "07:00","07:15","07:30","07:45","08:00","08:15","08:30","08:45",
@@ -166,6 +180,25 @@ namespace Minutes
             "18:00","18:15","18:30","18:45","19:00","19:15","19:30","19:45",
             "20:00","20:15","20:30","20:45","21:00","21:15","21:30","21:45",
             };
+        }
+
+        private void ChangeToggleSwitch()
+        {
+            StartInstantSave();
+            //if (_PortIsOpen == true)
+            //{
+            //    //Checked
+            //}
+            //else
+            //{
+            //    //UnChecked
+            //    m_MinutesModel.m_IsInstantSaveExecuting = false;
+            //}
+        }
+
+        private bool CanChangeToggleSwitch()
+        {
+            return true;
         }
 
         ~MainWindowViewModel()
@@ -182,15 +215,49 @@ namespace Minutes
             if (m_MinutesModel.m_IsInstantSaveExecuting == false)
             {
                 m_MinutesModel.m_IsInstantSaveExecuting = true;
-                Task.Run(() =>
+                if (_TokenSource == null) _TokenSource = new CancellationTokenSource();
+                _InstantSaveTask = Task.Factory.StartNew(() => 
                 {
                     while (m_MinutesModel.m_IsInstantSaveExecuting == true)
                     {
+                        try
+                        {
+                            // キャンセル要求がきていたらOperationCanceledException例外をスロー
+                            _TokenSource.Token.ThrowIfCancellationRequested();
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            break;
+                        }
                         InstantSaveMinutesCommand.Execute();
                         //設定された時間だけスリープ(設定は秒でおこなってもらう)
                         Thread.Sleep(Properties.Settings.Default.InstantSaveTimeSpan * 1000);
                     }
+                }, _TokenSource.Token).ContinueWith(t => 
+                {
+                    if(_TokenSource != null)_TokenSource.Dispose();
+                    _TokenSource = null;
+                    if (t.IsCanceled)
+                    {
+
+                    }
                 });
+            }
+            else
+            {
+                try
+                {
+                    m_MinutesModel.m_IsInstantSaveExecuting = false;
+                    //キャンセル要求
+                    if(_TokenSource != null)_TokenSource.Cancel(true);
+                    //スレッド終了待ち
+                    //_InstantSaveTask.Wait();
+                }
+                catch (OperationCanceledException oe)
+                {
+                    //タスクキャンセル時に実行される
+                    Console.WriteLine("Instant Save Cancelled.");
+                }
             }
         }
 

@@ -27,18 +27,21 @@
             <Label x:Name="agendaIndexLabel"
                    Content="{Binding m_AgendaIndex}"
                    Grid.Column="0"
-                   VerticalAlignment="Center"
-                   Foreground="{StaticResource TextForegroundColor}"
+                   VerticalAlignment="Top"
+                   Margin="0,18,0,0"
+                   Foreground="{StaticResource IconColor}"
                    HorizontalAlignment="Center" FontWeight="Bold" FontSize="18"/>
             <fa:ImageAwesome
                 Grid.Column="0"
                 Height="30"
-                VerticalAlignment="Center"
+                VerticalAlignment="Top"
+                Margin="0,20,0,0"
                 HorizontalAlignment="Center"
-                Foreground="{StaticResource TextForegroundColor}"
+                Foreground="{StaticResource IconColor}"
                 Icon="CircleOutline" />
             <!--  ValueConverterを使用してリスト中の該当する文字列を表示するように変更する  -->
             <TextBox
+                AcceptsReturn="True"
                 Grid.Column="1"
                 Margin="5,10,0,10"
                 VerticalAlignment="Center"
@@ -50,7 +53,13 @@
                 Style="{StaticResource HilightTextBox}"
                 Text="{Binding m_Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 TextWrapping="Wrap"/>
-            <fa:ImageAwesome Icon="TrashOutline" Height="20" Width="20" Grid.Column="2" Style="{StaticResource HilightImageAwesome}" >
+            <fa:ImageAwesome 
+                Icon="TrashOutline" 
+                Height="20" Width="20" 
+                VerticalAlignment="Top"
+                Margin="0,25,0,0"
+                Grid.Column="2" 
+                Style="{StaticResource HilightImageAwesome}" >
                 <i:Interaction.Behaviors>
                     <beh:DeleteAgendaBehavior />
                 </i:Interaction.Behaviors>
@@ -59,7 +68,7 @@
         <ListView ItemsSource="{Binding m_DetailItems}">
             <ListView.Template>
                 <ControlTemplate TargetType="ListView">
-                    <ItemsPresenter Margin="3,3,3,3"/>
+                    <ItemsPresenter Margin="3,3,0,3"/>
                 </ControlTemplate>
             </ListView.Template>
             <ListView.ItemsPanel>
@@ -69,7 +78,7 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <local:DetailContentUserControl Margin="40,0,0,0" Padding="5"/>
+                    <local:DetailContentUserControl Margin="40,0,0,0" Padding="5,5,0,5"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
