@@ -632,6 +632,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBox
+                            local:FocusUtility.IsFocused="True"
                             Height="22"
                             MinWidth="50"
                             Margin="0,0,0,0"
@@ -712,11 +713,12 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBox
+                            local:FocusUtility.IsFocused="True"
                             Height="22"
                             MinWidth="50"
                             FontSize="12"
-                                Background="{StaticResource TextBackgroundColor}"
-                                Foreground="{StaticResource TextForegroundColor}"
+                            Background="{StaticResource TextBackgroundColor}"
+                            Foreground="{StaticResource TextForegroundColor}"
                             Style="{StaticResource HilightTextBox}"
                             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <fa:ImageAwesome Icon="Times" Height="10" Width="10" Margin="0,0,5,0" Foreground="{StaticResource ResourceKey=UnselectColor}" Style="{StaticResource HilightImageAwesome}">
@@ -826,65 +828,65 @@
             Grid.RowSpan="5"
             Grid.Column="0">
             <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,1,0">
-            <StackPanel Orientation="Vertical">
-                <Label Content="{Binding m_Title}" FontSize="25" Foreground="{StaticResource TextForegroundColor}"/>
-                <ListBox ItemsSource="{Binding m_Agendas}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{StaticResource MainBackgroundColor}" BorderBrush="{x:Null}" >
-                    <!--<ListView.ItemsPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="{Binding m_Title}" FontSize="25" Foreground="{StaticResource TextForegroundColor}"/>
+                    <ListBox ItemsSource="{Binding m_Agendas}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{StaticResource MainBackgroundColor}" BorderBrush="{x:Null}" >
+                        <!--<ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel/>
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>-->
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="OverridesDefaultStyle" Value="True" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ContentControl">
-                                        <ContentPresenter />
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Content="{Binding m_AgendaIndex}" Foreground="{StaticResource TextForegroundColor}"/>
-                                        <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="OverridesDefaultStyle" Value="True" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ContentControl">
+                                            <ContentPresenter />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="{Binding m_AgendaIndex}" Foreground="{StaticResource TextForegroundColor}"/>
+                                            <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>
                                             <!--<Label Content="{Binding m_Content}"/>-->
+                                        </StackPanel>
+                                        <ListBox ItemsSource="{Binding m_DetailItems}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderBrush="{x:Null}" Background="{StaticResource MainBackgroundColor}">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="OverridesDefaultStyle" Value="True" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ContentControl">
+                                                                <ContentPresenter />
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label Content="・" Foreground="{StaticResource TextForegroundColor}"/>
+                                                            <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
                                     </StackPanel>
-                                    <ListBox ItemsSource="{Binding m_DetailItems}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderBrush="{x:Null}" Background="{StaticResource MainBackgroundColor}">
-                                        <ListBox.ItemContainerStyle>
-                                            <Style TargetType="ListBoxItem">
-                                                <Setter Property="OverridesDefaultStyle" Value="True" />
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="ContentControl">
-                                                            <ContentPresenter />
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </ListBox.ItemContainerStyle>
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Label Content="・" Foreground="{StaticResource TextForegroundColor}"/>
-                                                        <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>
-                                                    </StackPanel>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
             </Border>
         </Grid>
         <!--</ScrollViewer>-->

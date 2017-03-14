@@ -120,6 +120,7 @@
     <Compile Include="Behaviors\DeleteParticipantAction.cs" />
     <Compile Include="Behaviors\DeleteWriterAction.cs" />
     <Compile Include="Behaviors\SaveFileBehavior.cs" />
+    <Compile Include="FocusUtility.cs" />
     <Compile Include="Messenger.cs" />
     <Compile Include="UserControls\DetailContentUserControl.xaml.cs">
       <DependentUpon>DetailContentUserControl.xaml</DependentUpon>

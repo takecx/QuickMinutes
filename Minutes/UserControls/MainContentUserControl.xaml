@@ -47,6 +47,7 @@
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"
                 HorizontalAlignment="Stretch"
+                main:FocusUtility.IsFocused="true"
                 FontSize="35"
                 Background="{StaticResource TextBackgroundColor}"
                 Foreground="{StaticResource TextForegroundColor}"

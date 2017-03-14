@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
     xmlns:local="clr-namespace:Minutes.UserControls"
+    xmlns:main="clr-namespace:Minutes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:deteilact="clr-namespace:Minutes.Actions.DetailContent"
     xmlns:beh="clr-namespace:Minutes.Behaviors"
@@ -27,11 +28,12 @@
         </Grid.ColumnDefinitions>
         <Rectangle Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3" Fill="#FF50595F"/>
         <TextBox
+            main:FocusUtility.IsFocused="true"
             x:Name="textBox"
             Grid.Row="0"
             Grid.Column="1"
             Grid.ColumnSpan="3"
-            Margin="2,2"
+            Margin="3,2,1,3"
             VerticalAlignment="Center"
             VerticalContentAlignment="Center"
             FontSize="24"

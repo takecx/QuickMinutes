@@ -317,6 +317,7 @@ namespace Minutes
         internal void AddNewAgendaItem()
         {
             var newAgendaItem = new AgendaItem(_Agendas.Count);
+            //FocusManager.GetFocusedElement()
             //ViewModelへの追加
             //ここをコメントアウトするとListViewに要素が追加されない(表示が変わらない)
             _Agendas.Add(newAgendaItem);
