@@ -18,7 +18,7 @@ namespace Minutes
 
         public static void SetIsFocused(DependencyObject obj, bool value)
         {
-            obj.SetValue(IsFocusedProperty, false);
+            obj.SetValue(IsFocusedProperty, value);
         }
 
         public static readonly DependencyProperty IsFocusedProperty =

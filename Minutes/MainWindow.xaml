@@ -21,6 +21,12 @@
         <KeyBinding Command="{Binding StartInstantSaveCommand}" Gesture="Ctrl+S"/>
     </Window.InputBindings>
     <Window.Resources>
+        <local:DetailContentReferenceConverter x:Key="DetailContentReferenceConverter"/>
+        <local:IndexContentCombineConverter x:Key="indexContentCombineConverter"/>
+        <Storyboard x:Key="ListBoxHilightAnimation">
+            <ColorAnimation Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)" To="Red" Duration="0:0:0.2"/>
+            <!--<ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#FF4E4E74" Duration="0:0:0.2"/>-->
+        </Storyboard>
         <Style x:Key="AnimatedSwitch" TargetType="{x:Type ToggleButton}">
             <Setter Property="Foreground" Value="Black" />
             <Setter Property="Background" Value="#FAFAFB" />
@@ -480,7 +486,7 @@
             Height="37"
             Margin="10,7,50,7"
             VerticalAlignment="Center"
-            FontSize="18"
+            FontSize="25"
             Style="{StaticResource HilightTextBox}"
             Text="{Binding m_Title, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
             UseLayoutRounding="False" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}" ToolTip="Title" TabIndex="1" />
@@ -545,10 +551,13 @@
             VerticalAlignment="Bottom"
             Style="{StaticResource HilightTextBox}"
             Text="{Binding m_Day, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            TextWrapping="Wrap" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}" ToolTip="Date">
+            TextWrapping="Wrap" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}" ToolTip="Date" TabIndex="2">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="GotFocus">
                     <act:TextBoxCalenderAction TargetName="MainGrid" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="LostFocus">
+                    <act:TextBoxCalenderBanishAction TargetName="MainGrid" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </TextBox>
@@ -592,7 +601,7 @@
             VerticalAlignment="Bottom"
             Style="{StaticResource HilightTextBox}"
             Text="{Binding m_Room, Mode=TwoWay}"
-            TextWrapping="Wrap" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}" TabIndex="5">
+            TextWrapping="Wrap" Background="{StaticResource TextBackgroundColor}" Foreground="{DynamicResource TextForegroundColor}" TabIndex="6">
             <i:Interaction.Behaviors>
                 <beh:FitTextBoxWidthBehavior />
             </i:Interaction.Behaviors>
@@ -769,7 +778,7 @@
             VerticalAlignment="Bottom"
             IsEditable="True"
             ItemsSource="{Binding m_SelectableTimeList}"
-            Text="{Binding m_StartTime}" Style="{DynamicResource TimePickerComboBoxStyle}" ToolTip="Start Time" TabIndex="3" >
+            Text="{Binding m_StartTime}" Style="{DynamicResource TimePickerComboBoxStyle}" ToolTip="Start Time" TabIndex="4" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Foreground="{StaticResource TextForegroundColor}" Text="{Binding}"/>
@@ -788,7 +797,7 @@
             IsEditable="True"
             ItemsSource="{Binding m_SelectableTimeList}"
             Style="{DynamicResource TimePickerComboBoxStyle}"
-            Text="{Binding m_EndTime}" BorderBrush="{x:Null}" ToolTip="End Time" TabIndex="4" >
+            Text="{Binding m_EndTime}" BorderBrush="{x:Null}" ToolTip="End Time" TabIndex="5" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Foreground="{StaticResource TextForegroundColor}" Text="{Binding}"/>
@@ -806,14 +815,13 @@
             Margin="44,6,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Focusable="False"
-            Visibility="Hidden" TabIndex="2">
+            Visibility="Hidden" Focusable="False">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedDatesChanged">
-                    <act:TextBoxCalenderBanishAction TargetName="MainGrid" />
+                    <act:CalenderBanishAction TargetName="MainGrid" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="LostFocus">
-                    <act:TextBoxCalenderBanishAction TargetName="MainGrid" />
+                    <act:CalenderBanishAction TargetName="MainGrid" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Calendar>
@@ -825,25 +833,61 @@
             VerticalScrollBarVisibility="Auto"
             HorizontalScrollBarVisibility="Disabled">-->
         <Grid
-            Width="119"
             Grid.RowSpan="5"
             Grid.Column="0">
             <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,1,0">
                 <StackPanel Orientation="Vertical">
-                    <Label Content="{Binding m_Title}" FontSize="25" Foreground="{StaticResource TextForegroundColor}"/>
+                    <!--<Border BorderThickness="0,0,0,1" Grid.Column="1" Height="30" VerticalAlignment="Top">
+                        <TextBlock Text="{Binding m_Title}" TextTrimming="CharacterEllipsis" FontSize="20" Foreground="{StaticResource TextForegroundColor}"/>
+                        <Border.BorderBrush>
+                            <VisualBrush>
+                                <VisualBrush.Visual>
+                                    <Rectangle StrokeDashArray="4 2"
+                                   Stroke="{StaticResource BorderColor}"
+                                   StrokeThickness="2"
+                                   RadiusX="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}},Path=CornerRadius.TopRight}"
+                                   RadiusY="{Binding RelativeSource={RelativeSource AncestorType={x:Type Bold}},Path=CornerRadius.BottomLeft}"
+                                   Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}},Path=ActualWidth}"
+                                   Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}},Path=ActualHeight}"/>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Border.BorderBrush>
+                    </Border>-->
                     <ListBox ItemsSource="{Binding m_Agendas}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{StaticResource MainBackgroundColor}" BorderBrush="{x:Null}" >
-                        <!--<ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>-->
+                        <!--<ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>-->
                         <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
+                            <Style TargetType="{x:Type ListBoxItem}">
                                 <Setter Property="OverridesDefaultStyle" Value="True" />
                                 <Setter Property="Template">
                                     <Setter.Value>
-                                        <ControlTemplate TargetType="ContentControl">
-                                            <ContentPresenter />
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <Border x:Name="Border" Background="{StaticResource MainBackgroundColor}">
+                                                <Border.Style>
+                                                    <Style TargetType="{x:Type Border}">
+                                                        <Style.Triggers>
+                                                            <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#FF4E4E74" Duration="0:0:0.2"/>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </EventTrigger>
+                                                            <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#FF2D2D30" Duration="0:0:0.2"/>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </EventTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <ContentPresenter/>
+                                            </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
@@ -851,39 +895,89 @@
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
+                                <WrapPanel>
                                     <StackPanel Orientation="Vertical">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Label Content="{Binding m_AgendaIndex}" Foreground="{StaticResource TextForegroundColor}"/>
-                                            <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>
-                                            <!--<Label Content="{Binding m_Content}"/>-->
-                                        </StackPanel>
-                                        <ListBox ItemsSource="{Binding m_DetailItems}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderBrush="{x:Null}" Background="{StaticResource MainBackgroundColor}">
-                                            <ListBox.ItemContainerStyle>
-                                                <Style TargetType="ListBoxItem">
-                                                    <Setter Property="OverridesDefaultStyle" Value="True" />
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="ContentControl">
-                                                                <ContentPresenter />
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </ListBox.ItemContainerStyle>
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Label Content="・" Foreground="{StaticResource TextForegroundColor}"/>
-                                                            <TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>
-                                                        </StackPanel>
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
+                                        <Expander Header="{Binding m_Content}" Foreground="{StaticResource TextForegroundColor}">
+                                            <Expander.Template>
+                                                <ControlTemplate TargetType="{x:Type Expander}">
+                                                    <DockPanel>
+                                                        <ToggleButton IsChecked="{Binding Path=IsExpanded,RelativeSource={RelativeSource TemplatedParent}}" DockPanel.Dock="Top" OverridesDefaultStyle="True">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate>
+                                                                    <WrapPanel Orientation="Horizontal">
+                                                                        <TextBlock TextTrimming="CharacterEllipsis" FontSize="18" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}">
+                                                                            <TextBlock.Text>
+                                                                                <MultiBinding Converter="{StaticResource indexContentCombineConverter}">
+                                                                                    <Binding Path="m_AgendaIndex"/>
+                                                                                    <Binding Path="m_Content"/>
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Text>
+                                                                        </TextBlock>
+                                                                    </WrapPanel>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+                                                        <ContentPresenter x:Name="ExpanderContent" DockPanel.Dock="Bottom" Visibility="Collapsed"/>
+                                                    </DockPanel>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsExpanded" Value="True">
+                                                            <Setter TargetName="ExpanderContent" Property="Visibility" Value="Visible"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Expander.Template>
+                                            <ListBox ItemsSource="{Binding m_DetailItems}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}">
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="ListBoxItem">
+                                                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                                    <Border Background="{StaticResource MainBackgroundColor}">
+                                                                        <Border.Style>
+                                                                            <Style TargetType="{x:Type Border}">
+                                                                                <Style.Triggers>
+                                                                                    <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                                                                                        <BeginStoryboard>
+                                                                                            <Storyboard>
+                                                                                                <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#FF4E4E74" Duration="0:0:0.2"/>
+                                                                                            </Storyboard>
+                                                                                        </BeginStoryboard>
+                                                                                    </EventTrigger>
+                                                                                    <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                                                                        <BeginStoryboard>
+                                                                                            <Storyboard>
+                                                                                                <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#FF2D2D30" Duration="0:0:0.2"/>
+                                                                                            </Storyboard>
+                                                                                        </BeginStoryboard>
+                                                                                    </EventTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Border.Style>
+                                                                        <ContentPresenter />
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <WrapPanel Orientation="Horizontal">
+                                                                <!--<Label Content="・" Foreground="{StaticResource TextForegroundColor}" Background="{x:Null}"/>-->
+                                                                <TextBlock Text="{Binding m_Content,Converter={StaticResource DetailContentReferenceConverter}}" TextTrimming="CharacterEllipsis" FontSize="16" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>
+                                                            </WrapPanel>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Expander>
+                                        <!--<Label Content="{Binding m_AgendaIndex}" Foreground="{StaticResource TextForegroundColor}"/>-->
+                                        <!--<TextBlock Text="{Binding m_Content}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Foreground="{StaticResource TextForegroundColor}"/>-->
+                                        <!--<Label Content="{Binding m_Content}"/>-->
                                     </StackPanel>
-                                </Grid>
+                                </WrapPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

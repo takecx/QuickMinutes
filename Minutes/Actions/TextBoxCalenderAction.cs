@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interactivity;
 
 namespace Minutes.Actions
@@ -22,7 +23,7 @@ namespace Minutes.Actions
         {
             // TargetNameが未指定の場合は、TargetプロパティはAssociatedObjectを返す
             // TargetNameに存在しない要素名を渡すと、Targetプロパティはnullを返した(ドキュメントと異なる)
-            if (this.Target == null ||
+                    if (this.Target == null ||
                 this.Target == this.AssociatedObject)
             {
                 return;
@@ -36,6 +37,7 @@ namespace Minutes.Actions
                 if(control.GetType() == typeof(Calendar))
                 {
                     (control as Calendar).Visibility = System.Windows.Visibility.Visible;
+                    //FocusUtility.SetIsFocused(control as Calendar, true);
                     (control as Calendar).Focus();
                 }
             }
@@ -44,8 +46,7 @@ namespace Minutes.Actions
     }
 
 
-    [TypeConstraint(typeof(Calendar))]
-    //[TypeConstraint(typeof(TextBox))]
+    [TypeConstraint(typeof(TextBox))]
     public class TextBoxCalenderBanishAction : TargetedTriggerAction<Grid>
     {
 
@@ -60,26 +61,72 @@ namespace Minutes.Actions
                 return;
             }
 
-            // AssociatedObjectはDependencyObject型なので、必要ならキャスト
-            var source = (Calendar)this.AssociatedObject;
             //LINQを使って書き換えたい
-            TextBox dateTextBox = new TextBox();
-            //TextBox dayTextBox = from TextBox t in this.Target.Children.OfType<UIElement>()
-            //                     select t;
-            foreach(var control in this.Target.Children)
-            {
-                if((control as FrameworkElement).Name == "DateTextBox")
-                {
-                    dateTextBox = control as TextBox;
-                }
-            }
+            //TextBox dateTextBox = new TextBox();
+            ////TextBox dayTextBox = from TextBox t in this.Target.Children.OfType<UIElement>()
+            ////                     select t;
+            //foreach(var control in this.Target.Children)
+            //{
+            //    if((control as FrameworkElement).Name == "DateTextBox")
+            //    {
+            //        dateTextBox = control as TextBox;
+            //    }
+            //}
+            
             // Targetは型パラメーターで指定した型Tなので、キャストは不要
             foreach(var control in this.Target.Children)
             {
                 if((control as FrameworkElement).Name == "calender")
                 {
+                    if ((control as Calendar).Visibility == Visibility.Visible)
+                    {
+                        return;
+                    }
+
+                    //dateTextBox.Text = (control as Calendar).SelectedDate?.ToShortDateString();
+                    (this.AssociatedObject as TextBox).Text = (control as Calendar).SelectedDate?.ToShortDateString();
+                    (control as Calendar).Visibility = Visibility.Hidden;
+                    //FocusUtility.SetIsFocused(control as Calendar, false);
+                }
+            }
+        }
+
+    }
+    [TypeConstraint(typeof(Calendar))]
+    public class CalenderBanishAction : TargetedTriggerAction<Grid>
+    {
+
+        // Actionが実行されたときの処理
+        protected override void Invoke(object o)
+        {
+            // TargetNameが未指定の場合は、TargetプロパティはAssociatedObjectを返す
+            // TargetNameに存在しない要素名を渡すと、Targetプロパティはnullを返した(ドキュメントと異なる)
+            if (this.Target == null ||
+                this.Target == this.AssociatedObject)
+            {
+                return;
+            }
+
+            //LINQを使って書き換えたい
+            TextBox dateTextBox = new TextBox();
+            //TextBox dayTextBox = from TextBox t in this.Target.Children.OfType<UIElement>()
+            //                     select t;
+            foreach (var control in this.Target.Children)
+            {
+                if ((control as FrameworkElement).Name == "DateTextBox")
+                {
+                    dateTextBox = control as TextBox;
+                }
+            }
+
+            // Targetは型パラメーターで指定した型Tなので、キャストは不要
+            foreach (var control in this.Target.Children)
+            {
+                if ((control as FrameworkElement).Name == "calender")
+                {
                     dateTextBox.Text = (control as Calendar).SelectedDate?.ToShortDateString();
                     (control as Calendar).Visibility = Visibility.Hidden;
+                    //FocusUtility.SetIsFocused(control as Calendar, false);
                 }
             }
         }

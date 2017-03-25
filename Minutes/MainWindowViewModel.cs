@@ -421,4 +421,30 @@ namespace Minutes
             throw new NotImplementedException();
         }
     }
+    public class IndexContentCombineConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            int agendaIndex = (int)values[0];
+            var agendaContent = values[1] as string;
+            return agendaIndex.ToString() + "." + agendaContent;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class DetailContentReferenceConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return "・" + value as string;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

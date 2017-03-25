@@ -18,7 +18,7 @@ namespace Minutes.Actions.DetailContent
             {
                 (this.Target.DataContext as DetailItem).m_ContentIndentLevel--;
             }
-            this.Target.Margin = new System.Windows.Thickness(50 * (this.Target.DataContext as DetailItem).m_ContentIndentLevel, 0, 0, 0);
+            this.Target.Margin = new System.Windows.Thickness(30 * (this.Target.DataContext as DetailItem).m_ContentIndentLevel, 0, 0, 0);
         }
     }
 }

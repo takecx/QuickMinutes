@@ -79,7 +79,7 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <local:DetailContentUserControl Margin="40,0,0,0" Padding="5,5,0,5"/>
+                    <local:DetailContentUserControl Margin="30,0,0,0" Padding="5,5,0,5"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>

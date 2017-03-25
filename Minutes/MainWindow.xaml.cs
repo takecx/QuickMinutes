@@ -26,17 +26,20 @@ namespace Minutes
         public MainWindow()
         {
             InitializeComponent();
+            ListBoxItem item = new ListBoxItem();
+            item.Background = new SolidColorBrush(Colors.AliceBlue);
             Messenger.Instance.GetEvent<PubSubEvent<bool>>().Subscribe(
-                d => {
-                    if(d == true)
-                    {
+            d =>
+            {
+                if (d == true)
+                {
                         //Invokeを使ってUIスレッドから実行する必要がある
                         saveIcon.Dispatcher.BeginInvoke(
-                            new Action(() => { (saveIcon.Resources["HilightSaveIconAnimation"] as Storyboard).Begin(); })
-                            );
-                    }
+                        new Action(() => { (saveIcon.Resources["HilightSaveIconAnimation"] as Storyboard).Begin(); })
+                        );
                 }
-                );
+            }
+            );
         }
 
 
